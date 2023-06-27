@@ -1,0 +1,16 @@
+<h4 class="text-center m-3">Login</h4>
+<div class="form-container">
+  <form>
+      <input required name="email" [(ngModel)]="email"/>
+      <input required type="password" name="password" [(ngModel)]="password" />
+    <button (click)="login()">Login</button>
+  </form>
+<button (click)="logout()">Logout</button>
+</div>
+<h4 class="text-center m-3">Register</h4>
+<div class="form-container">
+    <input required name="reg_email" [(ngModel)]="reg_email" />
+    <input required type="password" name="reg_password" [(ngModel)]="reg_password" />
+    <input required type="password" name="reg_password_again" [(ngModel)]="reg_password_again" />
+  <button (click)="register()">Register</button>
+</div>

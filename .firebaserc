@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "petcare-330c7"
+  },
+  "targets": {
+    "petcare-330c7": {
+      "hosting": {
+        "pet-care": [
+          "petcare-330c7"
+        ]
+      }
+    }
+  }
+}
