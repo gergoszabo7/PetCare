@@ -61,9 +61,4 @@ export class LoginComponent implements OnInit {
     this.reg_password = '';
     this.reg_password_again = '';
   }
-
-  logout(){
-    this.auth.logout();
-  }
-
 }
