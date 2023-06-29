@@ -1,0 +1,10 @@
+@use '/src/styles/palette.scss' as colors;
+
+.navbar {
+    margin: 0;
+    background-color: colors.$petcare-secondary-background;
+}
+
+.navbar-brand img {
+    width: 36px;
+}
