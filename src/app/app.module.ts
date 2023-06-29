@@ -15,9 +15,10 @@ import { provideAuth,getAuth } from '@angular/fire/auth';
 import { provideFirestore,getFirestore } from '@angular/fire/firestore';
 import { AngularFireModule } from "@angular/fire/compat";
 import { OverviewComponent } from './overview/overview.component';
+import { HeaderComponent } from './header/header.component';
 
 @NgModule({
-  declarations: [AppComponent, LoginComponent, OverviewComponent],
+  declarations: [AppComponent, LoginComponent, OverviewComponent, HeaderComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,

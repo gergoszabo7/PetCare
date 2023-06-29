@@ -1,15 +1,31 @@
-<h4 class="text-center m-3">Login</h4>
-<div class="form-container">
-  <form>
-      <input required name="email" [(ngModel)]="email"/>
-      <input required type="password" name="password" [(ngModel)]="password" />
-    <button (click)="login()">Login</button>
-  </form>
-</div>
-<h4 class="text-center m-3">Register</h4>
-<div class="form-container">
-    <input required name="reg_email" [(ngModel)]="reg_email" />
-    <input required type="password" name="reg_password" [(ngModel)]="reg_password" />
-    <input required type="password" name="reg_password_again" [(ngModel)]="reg_password_again" />
-  <button (click)="register()">Register</button>
-</div>
+<body>
+  <h4 class="text-center m-4">Bejelentkezés</h4>
+  <div class="form-container">
+    <mat-form-field>
+      <mat-label>e-mail</mat-label>
+      <input matInput required name="email" [(ngModel)]="email" />
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>jelszó</mat-label>
+      <input matInput required type="password" name="password" [(ngModel)]="password" />
+    </mat-form-field>
+    <button color="primary" mat-raised-button (click)="login()">Bejelentkezés</button>
+  </div>
+  <mat-divider class="m-5"></mat-divider>
+  <h4 class="text-center m-2">Regisztráció</h4>
+  <div class="form-container">
+    <mat-form-field>
+      <mat-label>e-mail</mat-label>
+      <input matInput required name="reg_email" [(ngModel)]="reg_email" />
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>jelszó</mat-label>
+      <input matInput required type="password" name="reg_password" [(ngModel)]="reg_password" />
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>jelszó mégegyszer</mat-label>
+      <input matInput required type="password" name="reg_password_again" [(ngModel)]="reg_password_again" />
+    </mat-form-field>
+    <button color="accent" mat-raised-button (click)="register()">Regisztráció</button>
+  </div>
+</body>
