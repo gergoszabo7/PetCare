@@ -3,6 +3,20 @@
 .navbar {
     margin: 0;
     background-color: colors.$petcare-secondary-background;
+
+    li {
+        font-weight: 600;
+    }
+
+    li:hover {
+        border-radius: 0.6rem;
+        background-color: rgba($color: #000000, $alpha: 0.03);
+    }
+
+    .navbar-brand:hover {
+        border-radius: 1rem;
+        background-color: rgba($color: #ffffff, $alpha: 0.5);
+    }
 }
 
 .navbar-brand img {

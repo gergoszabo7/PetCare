@@ -47,3 +47,11 @@ button {
   font-weight: 500 !important;
   font-size: 1.2rem !important;
 }
+
+.mat-mdc-snack-bar-container {
+  &.red-snackbar {
+    --mdc-snackbar-container-color: #ca2121f0;
+    --mat-mdc-snack-bar-button-color: #fff;
+    --mdc-snackbar-supporting-text-color: #fff;
+  }
+}

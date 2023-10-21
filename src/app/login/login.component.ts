@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import { FormBuilder, FormGroup, FormControl } from "@angular/forms";
 import { AuthService } from '../shared/auth.service';
+import { SnackbarService } from '../shared/snackbar.service';
 
 @Component({
   selector: 'app-login',
@@ -17,18 +18,18 @@ export class LoginComponent implements OnInit {
 
   loginForm: FormGroup;
 
-  constructor(private fb: FormBuilder, private auth: AuthService) {}
+  constructor(private fb: FormBuilder, private auth: AuthService, private snackBarService: SnackbarService) {}
 
   ngOnInit(): void {}
 
   login(){
     console.log(this.email);
     if (this.email === ''){
-      alert('Please enter email!');
+      this.snackBarService.openSnackBar('Kérem írjon be e-mail címet!', undefined, { duration: 3000 ,panelClass: ['red-snackbar']});
       return;
     }
     if (this.password === ''){
-      alert('Please enter password!');
+      this.snackBarService.openSnackBar('Kérem írjon be jelszót!', undefined, { duration: 3000 ,panelClass: ['red-snackbar']});
       return;
     }
 
@@ -42,15 +43,15 @@ export class LoginComponent implements OnInit {
 
   register(){
     if (this.reg_email === ''){
-      alert('Please enter email!');
+      this.snackBarService.openSnackBar('Kérem írjon be e-mail címet!', undefined, { duration: 3000 ,panelClass: ['red-snackbar']});
       return;
     }
     if (this.reg_password === ''){
-      alert('Please enter password!');
+      this.snackBarService.openSnackBar('Kérem írjon be jelszót!', undefined, { duration: 3000 ,panelClass: ['red-snackbar']});
       return;
     }
     if(this.reg_password !==  this.reg_password_again){
-      alert('Passwords do not match!');
+      this.snackBarService.openSnackBar('A jelszavaknak meg kell egyezniük', undefined, { duration: 3000 ,panelClass: ['red-snackbar']});
       return;
     }
 
