@@ -15,6 +15,7 @@ export class AuthGuard implements CanActivate {
       const auth = getAuth();
       onAuthStateChanged(auth, (user) => {
         if (user) {
+          console.log(user);
           resolve(true); // User is authenticated, allow navigation
         } else {
           this.router.navigate(['/login']);

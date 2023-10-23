@@ -20,15 +20,9 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './auth.guard';
 
-const routes: Routes = [
-  { path: 'overview', component: OverviewComponent, canActivate: [AuthGuard]},
-  { path: 'login', component: LoginComponent},
-];
-
 @NgModule({
   declarations: [AppComponent, LoginComponent, OverviewComponent, HeaderComponent],
   imports: [
-    RouterModule.forRoot(routes),
     BrowserModule,
     AppRoutingModule,
     AngularFireModule.initializeApp(environment.firebase),
@@ -45,7 +39,7 @@ const routes: Routes = [
     provideFirestore(() => getFirestore())
   ],
   exports: [RouterModule],
-  providers: [],
+  providers: [AuthGuard],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
