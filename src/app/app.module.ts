@@ -19,6 +19,7 @@ import { HeaderComponent } from './header/header.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './auth.guard';
+import { MatTabsModule } from '@angular/material/tabs';
 
 @NgModule({
   declarations: [AppComponent, LoginComponent, OverviewComponent, HeaderComponent],
@@ -32,6 +33,7 @@ import { AuthGuard } from './auth.guard';
     MatInputModule,
     MatButtonModule,
     MatDividerModule,
+    MatTabsModule,
     FormsModule,
     ReactiveFormsModule,
     provideFirebaseApp(() => initializeApp(environment.firebase)),

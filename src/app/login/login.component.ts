@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import { FormBuilder, FormGroup, FormControl } from "@angular/forms";
 import { AuthService } from '../shared/auth.service';
 import { SnackbarService } from '../shared/snackbar.service';
+import {MatTabsModule} from '@angular/material/tabs';
 
 @Component({
   selector: 'app-login',
@@ -23,7 +24,6 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {}
 
   login(){
-    console.log(this.email);
     if (this.email === ''){
       this.snackBarService.openSnackBar('Kérem írjon be e-mail címet!', undefined, { duration: 3000 ,panelClass: ['red-snackbar']});
       return;
