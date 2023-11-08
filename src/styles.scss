@@ -54,4 +54,10 @@ button {
     --mat-mdc-snack-bar-button-color: #fff;
     --mdc-snackbar-supporting-text-color: #fff;
   }
+
+  &.green-snackbar {
+    --mdc-snackbar-container-color: #2ed573;
+    --mat-mdc-snack-bar-button-color: #1e272e;
+    --mdc-snackbar-supporting-text-color: #1e272e;
+  }
 }

@@ -1,2 +1,25 @@
 <p>Bejelentkezve: {{this.user}}</p>
 <button (click)="logout()">Logout</button>
+<div class="form-container">
+    <mat-form-field [formGroup]="addPetForm">
+      <mat-label>név</mat-label>
+      <input matInput required name="name" formControlName="name" />
+    </mat-form-field>
+    <mat-form-field [formGroup]="addPetForm">
+      <mat-label>születési idő</mat-label>
+      <input matInput [matDatepicker]="birthDatePicker" required formControlName="birth" name="birth">
+      <mat-datepicker-toggle matSuffix [for]="birthDatePicker"></mat-datepicker-toggle>
+      <mat-datepicker #birthDatePicker></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field [formGroup]="addPetForm">
+        <mat-label>súly</mat-label>
+        <input matInput required type="number" name="weight" formControlName="weight"/>
+    </mat-form-field>
+    <button color="primary" mat-raised-button type="submit" (click)="addPet()">Hozzáadás</button>
+    <button mat-raised-button (click)="listPets()">list</button>
+</div>
+<div *ngFor="let myPet of this.myPets">
+    <div>{{ 'név: ' + myPet.name }}</div>
+    <div>{{ 'súly: ' + myPet.weight }}</div>
+    <div>{{ 'születési idő: ' + myPet.birth }}</div>
+</div>

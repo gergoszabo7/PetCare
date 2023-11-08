@@ -16,10 +16,10 @@ export class AuthGuard implements CanActivate {
       onAuthStateChanged(auth, (user) => {
         if (user) {
           console.log(user);
-          resolve(true); // User is authenticated, allow navigation
+          resolve(true);
         } else {
           this.router.navigate(['/login']);
-          resolve(false); // User is not authenticated, prevent navigation
+          resolve(false);
         }
       });
     });
