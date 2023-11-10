@@ -1,0 +1,16 @@
+.add-button-container {
+    position: fixed;
+    bottom: 48px;
+    right: 48px;
+    z-index: 2;
+    button {
+        height:80px !important;
+        width:80px !important;
+    }
+  }
+
+  ::ng-deep .mat-icon{
+    height:80px !important;
+    width:80px !important;
+    font-size:80px !important;
+}

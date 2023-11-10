@@ -5,6 +5,8 @@ import { Router } from '@angular/router';
 import { Pet } from '../models/pet.model';
 import { FirebaseCrudService } from '../shared/firebase-crud.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { NewPetDialogComponent } from '../dialogs/new-pet-dialog/new-pet-dialog.component';
 
 @Component({
   selector: 'app-overview',
@@ -20,7 +22,8 @@ export class OverviewComponent implements OnInit {
 
   constructor(private authService: AuthService, 
     private router: Router, 
-    private firebaseCrudService: FirebaseCrudService, 
+    private firebaseCrudService: FirebaseCrudService,
+    private dialog: MatDialog,
     private fb: FormBuilder){}
 
   ngOnInit(): void {
@@ -41,16 +44,10 @@ export class OverviewComponent implements OnInit {
   }
 
   addPet() {
-    const formattedBirthDate = this.addPetForm.get('birth')?.value.toLocaleString().substring(0, 13);
-    this.pet = {
-      name: this.addPetForm.get('name')?.value,
-      birth: formattedBirthDate,
-      weight: this.addPetForm.get('weight')?.value,
-      userId: this.auth.currentUser.uid
-    }
-    console.log(this.pet);
-    this.firebaseCrudService.createPet(this.pet);
-    this.addPetForm.reset();
+    this.dialog.open(NewPetDialogComponent, {
+      height: '500px',
+      width: '350px',
+    });
   }
 
   listPets() {

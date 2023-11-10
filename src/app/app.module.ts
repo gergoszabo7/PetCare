@@ -23,14 +23,19 @@ import { AuthGuard } from './auth.guard';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { DatePipe } from '@angular/common';
+import { NewPetDialogComponent } from './dialogs/new-pet-dialog/new-pet-dialog.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
-  declarations: [AppComponent, LoginComponent, OverviewComponent, HeaderComponent],
+  declarations: [AppComponent, LoginComponent, OverviewComponent, HeaderComponent, NewPetDialogComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
     AngularFireModule.initializeApp(environment.firebase),
     BrowserAnimationsModule,
+    MatIconModule,
+    MatDialogModule,
     MatFormFieldModule,
     MatSnackBarModule,
     MatInputModule,
