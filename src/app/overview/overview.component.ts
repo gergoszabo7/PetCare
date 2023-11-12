@@ -18,7 +18,6 @@ export class OverviewComponent implements OnInit {
   user: string;
   myPets = [];
   pet: Pet;
-  addPetForm: FormGroup;
 
   constructor(private authService: AuthService, 
     private router: Router, 
@@ -31,11 +30,6 @@ export class OverviewComponent implements OnInit {
       this.auth = getAuth();
       this.user = this.auth.currentUser.email;
     }
-    this.addPetForm = this.fb.group({
-      name: ['', Validators.required],
-      birth: [null, Validators.required],
-      weight: [null, Validators.required],
-    })
     this.listPets();
   }
 
@@ -45,8 +39,8 @@ export class OverviewComponent implements OnInit {
 
   addPet() {
     this.dialog.open(NewPetDialogComponent, {
-      height: '500px',
-      width: '350px',
+      height: '650px',
+      width: '360px',
     });
   }
 
@@ -56,5 +50,20 @@ export class OverviewComponent implements OnInit {
         this.myPets.push({...doc.data()});
       })
     })
+  }
+
+  getPetAge(birth: string): {age: number, time: string} {
+    const currentDate = new Date();
+    const givenDate = new Date(birth);
+    const dateDifferenceInMillis = currentDate.getTime() - givenDate.getTime();
+    if (Math.floor(dateDifferenceInMillis / (1000 * 60 * 60 * 24 * 365.25)) >= 1) {
+      return {age: Math.floor(dateDifferenceInMillis / (1000 * 60 * 60 * 24 * 365.25)), time: 'év'};
+    } else if (Math.floor(dateDifferenceInMillis / (1000 * 60 * 60 * 24 * 30.44)) >= 1) {
+      return {age: Math.floor(dateDifferenceInMillis / (1000 * 60 * 60 * 24 * 30.44)), time: 'hónap'}
+    } else if (Math.floor(dateDifferenceInMillis / (1000 * 60 * 60 * 24 * 7)) >= 1) {
+      return {age: Math.floor(dateDifferenceInMillis / (1000 * 60 * 60 * 24 * 7)), time: 'hét'}
+    } else {
+      return {age: undefined, time: 'újszülött'}
+    }
   }
 }

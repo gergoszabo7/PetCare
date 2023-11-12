@@ -26,6 +26,10 @@ import { DatePipe } from '@angular/common';
 import { NewPetDialogComponent } from './dialogs/new-pet-dialog/new-pet-dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSelectModule } from '@angular/material/select';
+import { MatCardModule } from '@angular/material/card';
+import { HttpClientModule } from '@angular/common/http';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 @NgModule({
   declarations: [AppComponent, LoginComponent, OverviewComponent, HeaderComponent, NewPetDialogComponent],
@@ -43,8 +47,12 @@ import { MatIconModule } from '@angular/material/icon';
     MatDatepickerModule,
     MatNativeDateModule,
     MatDividerModule,
+    MatSelectModule,
+    MatAutocompleteModule,
     MatTabsModule,
+    MatCardModule,
     FormsModule,
+    HttpClientModule,
     ReactiveFormsModule,
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),
