@@ -35,29 +35,35 @@ $pet-care-theme: mat.define-light-theme((
 @include mat.all-component-themes($pet-care-theme);
 
 * {
-  margin: 0;
-  font-family: "Gill Sans", sans-serif;
+    margin: 0;
+    font-family: "Gill Sans", sans-serif;
 }
 
 body {
-  background-color: colors.$petcare-primary-background;
+    background-color: colors.$petcare-primary-background;
 }
 
 button {
-  font-weight: 500 !important;
-  font-size: 1.2rem !important;
+    font-weight: 500 !important;
+    font-size: 1.2rem !important;
 }
 
 .mat-mdc-snack-bar-container {
-  &.red-snackbar {
-    --mdc-snackbar-container-color: #ca2121f0;
-    --mat-mdc-snack-bar-button-color: #fff;
-    --mdc-snackbar-supporting-text-color: #fff;
-  }
+    &.red-snackbar {
+        --mdc-snackbar-container-color: #ca2121f0;
+        --mat-mdc-snack-bar-button-color: #fff;
+        --mdc-snackbar-supporting-text-color: #fff;
+    }
 
-  &.green-snackbar {
-    --mdc-snackbar-container-color: #2ed573;
-    --mat-mdc-snack-bar-button-color: #1e272e;
-    --mdc-snackbar-supporting-text-color: #1e272e;
-  }
+    &.green-snackbar {
+        --mdc-snackbar-container-color: #2ed573;
+        --mat-mdc-snack-bar-button-color: #1e272e;
+        --mdc-snackbar-supporting-text-color: #1e272e;
+    }
+
+    &.yellow-snackbar {
+        --mdc-snackbar-container-color: #e1b12c;
+        --mat-mdc-snack-bar-button-color: #1e272e;
+        --mdc-snackbar-supporting-text-color: #1e272e;
+    }
 }

@@ -17,6 +17,12 @@
         border-radius: 1rem;
         background-color: rgba($color: #ffffff, $alpha: 0.5);
     }
+
+    .log-out {
+        mat-icon {
+            font-weight: 600;
+        }
+    }
 }
 
 .navbar-brand img {

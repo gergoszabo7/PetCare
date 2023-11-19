@@ -1,43 +1,80 @@
 <div class="container">
-    <h4 class="text-center m-4">{{ pet.name }}</h4>
     <div class="row justify-content-center align-items-center">
         <div class="d-flex justify-content-center img-div">
             <img [src]="'/assets/default-image.png'" alt="Pet Image" />
         </div>
         <div class="col-md-8">
-            <div>{{ pet.birth }}</div>
             <div class="form-container text-center">
-                <mat-form-field [formGroup]="updatePetForm" class="w-50 m-4">
-                    <mat-label>név</mat-label>
-                    <input
-                        matInput
-                        required
-                        name="name"
-                        formControlName="name"
-                    />
-                </mat-form-field>
-                <mat-form-field [formGroup]="updatePetForm" class="w-50 m-4">
-                    <mat-label>súly</mat-label>
-                    <input
-                        matInput
-                        required
-                        type="number"
-                        name="weight"
-                        formControlName="weight"
-                    />
-                </mat-form-field>
-                <div class="mt-4 w-100 d-flex justify-content-center">
+                <div class="w-50 my-5 mx-3">
+                    <h4 class="text-center">{{ pet.name }}</h4>
+                </div>
+                <div class="w-50 mt-5 mb-0 mx-4">
+                    <mat-form-field [formGroup]="updatePetForm">
+                        <mat-label>név</mat-label>
+                        <input
+                            matInput
+                            required
+                            name="name"
+                            formControlName="name"
+                            class="text-center"
+                        />
+                    </mat-form-field>
+                </div>
+                <div class="w-50 my-3 mx-4">
+                    <mat-form-field [formGroup]="updatePetForm">
+                        <mat-label>súly</mat-label>
+                        <input
+                            matInput
+                            required
+                            type="number"
+                            name="weight"
+                            formControlName="weight"
+                            class="text-center"
+                        />
+                    </mat-form-field>
+                </div>
+                <div class="w-50 my-5 mx-4">
+                    <label>Születési év</label>
+                    <p>{{ pet.birth }}</p>
+                </div>
+                <div class="w-50 my-5 mx-4">
+                    <label>Nem</label>
+                    <p>{{ pet.sex }}</p>
+                </div>
+                <div class="w-50 my-5 mx-4">
+                    <label>Faj</label>
+                    <p>{{ pet.petType }}</p>
+                </div>
+                <div class="w-50 my-5 mx-4">
+                    <label>Fajta</label>
+                    <p>{{ pet.breed }}</p>
+                </div>
+                <div class="w-50 my-5 mx-4">
+                    <label>Szín</label>
+                    <p>{{ pet.color ?? "Nincs megadva" }}</p>
+                </div>
+                <div class="my-5 w-100 d-flex justify-content-start">
                     <button
-                        class="mx-2"
-                        color="accent"
+                        class="mx-3"
+                        color="primary"
                         mat-raised-button
                         type="submit"
                         (click)="updatePet()"
                     >
+                        <mat-icon>save</mat-icon>
+                        Mentés
+                    </button>
+                    <button
+                        class="mx-3"
+                        color="accent"
+                        mat-raised-button
+                        (click)="addStatus()"
+                    >
+                        <mat-icon>add</mat-icon>
                         Módosítás
                     </button>
                     <button
-                        class="mx-2"
+                        class="mx-3"
                         mat-raised-button
                         color="warn"
                         (click)="deletePet()"

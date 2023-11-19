@@ -1,8 +1,8 @@
 <nav class="navbar navbar-expand-lg">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="#"
-            ><img class="mx-2" src="../../assets/paw_icon.png"
-        /></a>
+    <div class="container-fluid d-flex justify-content-between">
+        <a class="navbar-brand" href="#">
+            <img class="mx-2" src="../../assets/paw_icon.png" />
+        </a>
         <button
             class="navbar-toggler"
             type="button"
@@ -31,6 +31,15 @@
                     <a class="nav-link" href="#">Keresés</a>
                 </li>
             </ul>
+        </div>
+        <div class="nav-item mx-3">
+            <a
+                class="nav-link log-out"
+                routerLink="overview/main-page"
+                (click)="logout()"
+            >
+                <mat-icon>logout</mat-icon>
+            </a>
         </div>
     </div>
 </nav>

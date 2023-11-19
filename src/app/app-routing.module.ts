@@ -14,6 +14,11 @@ const routes: Routes = [
         canActivate: [AuthGuard],
         children: [
             {
+                path: '',
+                redirectTo: 'main-page',
+                pathMatch: 'full',
+            },
+            {
                 path: 'view-pet',
                 component: ViewPetComponent,
             },

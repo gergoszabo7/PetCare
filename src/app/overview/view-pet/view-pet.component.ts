@@ -6,8 +6,8 @@ import { Auth } from 'firebase/auth';
 import { AuthService } from '../../shared/auth.service';
 import { FirebaseCrudService } from '../../shared/firebase-crud.service';
 import { HttpClient } from '@angular/common/http';
-import {ConfirmDialogComponent} from "../../dialogs/confirm-dialog/confirm-dialog.component";
-import {MatDialog} from "@angular/material/dialog";
+import { ConfirmDialogComponent } from '../../dialogs/confirm-dialog/confirm-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
     selector: 'app-view-pet',
@@ -25,7 +25,7 @@ export class ViewPetComponent implements OnInit {
         private firebaseCrudService: FirebaseCrudService,
         private http: HttpClient,
         private fb: FormBuilder,
-        private dialog: MatDialog,
+        private dialog: MatDialog
     ) {}
     ngOnInit(): void {
         this.route.params.subscribe((params) => {
@@ -64,6 +64,10 @@ export class ViewPetComponent implements OnInit {
                 this.firebaseCrudService.deletePet(this.petId);
             }
         });
+    }
+
+    addStatus() {
+        console.log();
     }
 
     private initializeForm(): void {

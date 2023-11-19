@@ -35,10 +35,6 @@ export class OverviewComponent implements OnInit {
         this.listPets();
     }
 
-    logout() {
-        this.authService.logout();
-    }
-
     addPet() {
         this.dialog.open(NewPetDialogComponent, {
             height: '780px',

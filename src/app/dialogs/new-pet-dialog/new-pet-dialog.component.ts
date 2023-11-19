@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -9,14 +9,15 @@ import { Breed } from 'src/app/models/breed.model';
 import { Pet } from 'src/app/models/pet.model';
 import { AuthService } from 'src/app/shared/auth.service';
 import { FirebaseCrudService } from 'src/app/shared/firebase-crud.service';
-import {UtilsService} from "../../shared/utils.service";
+import { UtilsService } from '../../shared/utils.service';
+import {SnackbarService} from "../../shared/snackbar.service";
 
 @Component({
     selector: 'app-new-pet-dialog',
     templateUrl: './new-pet-dialog.component.html',
     styleUrls: ['./new-pet-dialog.component.scss'],
 })
-export class NewPetDialogComponent {
+export class NewPetDialogComponent implements OnInit {
     auth: Auth;
     user: string;
     breeds: Breed[] = [];
@@ -34,6 +35,7 @@ export class NewPetDialogComponent {
         private http: HttpClient,
         private fb: FormBuilder,
         private utilsService: UtilsService,
+        private snackbarService: SnackbarService,
     ) {}
 
     ngOnInit(): void {
@@ -57,7 +59,7 @@ export class NewPetDialogComponent {
         this.addPetForm = this.fb.group({
             name: ['', Validators.required],
             birth: [null, Validators.required],
-            weight: [null, Validators.required],
+            weight: null,
             petType: [null, Validators.required],
             breed: [null, Validators.required],
             sex: [null, Validators.required],
@@ -82,11 +84,20 @@ export class NewPetDialogComponent {
     }
 
     addPet() {
-        const birthValue = this.addPetForm.get('birth')?.value;
-        const formattedBirthDate = this.utilsService.formatDate(birthValue);
+        if (this.addPetForm.invalid) {
+            this.snackbarService.openSnackBar(
+                'Kötelező mezőket ki kell tölteni!',
+                undefined,
+                { duration: 3000, panelClass: ['yellow-snackbar'] }
+            );
+            return;
+        }
+        const formattedBirthDate = this.utilsService.formatDate(
+            this.addPetForm.get('birth')?.value
+        );
         this.pet = {
             name: this.addPetForm.get('name')?.value,
-            birth: new Date(formattedBirthDate),
+            birth: formattedBirthDate,
             weight: this.addPetForm.get('weight')?.value,
             petType: this.addPetForm.get('petType')?.value,
             breed: this.addPetForm.get('breed')?.value,
@@ -94,7 +105,6 @@ export class NewPetDialogComponent {
             color: this.addPetForm.get('color')?.value,
             userId: this.auth.currentUser.uid,
         };
-        console.log(this.pet);
         this.firebaseCrudService.createPet(this.pet);
         this.closeDialog();
     }
