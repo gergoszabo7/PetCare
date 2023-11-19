@@ -1,0 +1,52 @@
+<div class="container">
+    <h4 class="text-center m-4">{{ pet.name }}</h4>
+    <div class="row justify-content-center align-items-center">
+        <div class="d-flex justify-content-center img-div">
+            <img [src]="'/assets/default-image.png'" alt="Pet Image" />
+        </div>
+        <div class="col-md-8">
+            <div>{{ pet.birth }}</div>
+            <div class="form-container text-center">
+                <mat-form-field [formGroup]="updatePetForm" class="w-50 m-4">
+                    <mat-label>név</mat-label>
+                    <input
+                        matInput
+                        required
+                        name="name"
+                        formControlName="name"
+                    />
+                </mat-form-field>
+                <mat-form-field [formGroup]="updatePetForm" class="w-50 m-4">
+                    <mat-label>súly</mat-label>
+                    <input
+                        matInput
+                        required
+                        type="number"
+                        name="weight"
+                        formControlName="weight"
+                    />
+                </mat-form-field>
+                <div class="mt-4 w-100 d-flex justify-content-center">
+                    <button
+                        class="mx-2"
+                        color="accent"
+                        mat-raised-button
+                        type="submit"
+                        (click)="updatePet()"
+                    >
+                        Módosítás
+                    </button>
+                    <button
+                        class="mx-2"
+                        mat-raised-button
+                        color="warn"
+                        (click)="deletePet()"
+                    >
+                        <mat-icon>delete</mat-icon>
+                        Törlés
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

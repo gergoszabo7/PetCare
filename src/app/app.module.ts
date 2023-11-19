@@ -1,28 +1,29 @@
-import { NgModule } from '@angular/core';
+import {LOCALE_ID, NgModule} from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule, ReactiveFormsModule} from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatNativeDateModule } from '@angular/material/core';
+import {MAT_DATE_LOCALE, MatNativeDateModule} from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from "@angular/material/button";
-import { MatDividerModule } from "@angular/material/divider";
-import { initializeApp,provideFirebaseApp } from '@angular/fire/app';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDividerModule } from '@angular/material/divider';
+import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { environment } from '../environments/environment';
-import { provideAuth,getAuth } from '@angular/fire/auth';
-import { provideFirestore,getFirestore } from '@angular/fire/firestore';
-import { AngularFireModule } from "@angular/fire/compat";
-import { OverviewComponent } from './overview/overview.component';
+import { provideAuth, getAuth } from '@angular/fire/auth';
+import { provideFirestore, getFirestore } from '@angular/fire/firestore';
+import { AngularFireModule } from '@angular/fire/compat';
+import { OverviewComponent } from './overview/main-page/overview.component';
 import { HeaderComponent } from './header/header.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './auth.guard';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { DatePipe } from '@angular/common';
+import { DatePipe, registerLocaleData } from '@angular/common';
+import localeHu from '@angular/common/locales/hu';
 import { NewPetDialogComponent } from './dialogs/new-pet-dialog/new-pet-dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
@@ -30,36 +31,52 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatCardModule } from '@angular/material/card';
 import { HttpClientModule } from '@angular/common/http';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { ViewPetComponent } from './overview/view-pet/view-pet.component';
+import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
 
+registerLocaleData(localeHu);
 @NgModule({
-  declarations: [AppComponent, LoginComponent, OverviewComponent, HeaderComponent, NewPetDialogComponent],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    AngularFireModule.initializeApp(environment.firebase),
-    BrowserAnimationsModule,
-    MatIconModule,
-    MatDialogModule,
-    MatFormFieldModule,
-    MatSnackBarModule,
-    MatInputModule,
-    MatButtonModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-    MatDividerModule,
-    MatSelectModule,
-    MatAutocompleteModule,
-    MatTabsModule,
-    MatCardModule,
-    FormsModule,
-    HttpClientModule,
-    ReactiveFormsModule,
-    provideFirebaseApp(() => initializeApp(environment.firebase)),
-    provideAuth(() => getAuth()),
-    provideFirestore(() => getFirestore())
-  ],
-  exports: [RouterModule],
-  providers: [AuthGuard, DatePipe],
-  bootstrap: [AppComponent],
+    declarations: [
+        AppComponent,
+        LoginComponent,
+        OverviewComponent,
+        HeaderComponent,
+        NewPetDialogComponent,
+        ViewPetComponent,
+        ConfirmDialogComponent,
+    ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        AngularFireModule.initializeApp(environment.firebase),
+        BrowserAnimationsModule,
+        MatIconModule,
+        MatDialogModule,
+        MatFormFieldModule,
+        MatSnackBarModule,
+        MatInputModule,
+        MatButtonModule,
+        MatDatepickerModule,
+        MatNativeDateModule,
+        MatDividerModule,
+        MatSelectModule,
+        MatAutocompleteModule,
+        MatTabsModule,
+        MatCardModule,
+        FormsModule,
+        HttpClientModule,
+        ReactiveFormsModule,
+        provideFirebaseApp(() => initializeApp(environment.firebase)),
+        provideAuth(() => getAuth()),
+        provideFirestore(() => getFirestore()),
+    ],
+    exports: [RouterModule],
+    providers: [
+        AuthGuard,
+        DatePipe,
+        { provide: LOCALE_ID, useValue: 'hu-HU' },
+        { provide: MAT_DATE_LOCALE, useValue: 'hu-HU' },
+    ],
+    bootstrap: [AppComponent],
 })
 export class AppModule {}

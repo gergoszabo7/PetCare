@@ -1,0 +1,89 @@
+<p>Bejelentkezve: {{ this.user }}</p>
+<button (click)="logout()">Logout</button>
+
+<div class="mat-card-container my-5" *ngFor="let myPet of myPets">
+    <mat-card class="mat-card" (click)="editPet(myPet)">
+        <mat-card-header class="mx-auto mb-5 mt-3">
+            <mat-card-title class="text-center"
+                ><h4>{{ myPet.name }}</h4></mat-card-title
+            >
+        </mat-card-header>
+        <mat-card-content>
+            <div class="row">
+                <div class="col-md-3 mb-5 mx-4">
+                    <div>
+                        <img
+                            [src]="'/assets/default-image.png'"
+                            alt="Pet Image"
+                        />
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="row my-3 me-5">
+                        <div class="col-md-3 col-sm-12 mx-5">
+                            <label>Faj</label>
+                            <p>{{ myPet.petType }}</p>
+                        </div>
+                        <div class="col-md-3 col-sm-12 ms-5">
+                            <label>Súly</label>
+                            <p>
+                                {{
+                                    myPet.weight
+                                        ? myPet.weight + " kg"
+                                        : "Nincs megadva"
+                                }}
+                            </p>
+                        </div>
+                        <div class="col-md-3 todo ms-5">
+                            <ul>
+                                <li>teendő1</li>
+                                <li>teendő2</li>
+                                <li>teendő3</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="row my-3 me-5">
+                        <div class="col-md-3 mx-5">
+                            <label>Fajta</label>
+                            <p>{{ myPet.breed }}</p>
+                        </div>
+                        <div class="col-md-3 col-sm-12 ms-5">
+                            <label>Nem</label>
+                            <p>{{ myPet.sex }}</p>
+                        </div>
+                    </div>
+                    <div class="row my-3 me-5">
+                        <div class="col-md-3 col-sm-12 mx-5">
+                            <label>Szín</label>
+                            <p>
+                                {{
+                                    myPet.color ? myPet.color : "Nincs megadva"
+                                }}
+                            </p>
+                        </div>
+                        <div class="col-md-3 col-sm-12 ms-5">
+                            <label>Életkor</label>
+                            <p>
+                                {{
+                                    getPetAge(myPet.birth).age
+                                        ? getPetAge(myPet.birth).age + " "
+                                        : ""
+                                }}{{ getPetAge(myPet.birth).time }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </mat-card-content>
+    </mat-card>
+</div>
+<div class="add-button-container">
+    <button
+        mat-fab
+        color="primary"
+        (click)="addPet()"
+        aria-label="Háziállat hozzáadása"
+    >
+        <mat-icon>add</mat-icon>
+    </button>
+</div>
