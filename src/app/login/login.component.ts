@@ -43,11 +43,6 @@ export class LoginComponent {
         }
 
         this.auth.login(this.email, this.password);
-        this.email = '';
-        this.password = '';
-        this.reg_email = '';
-        this.reg_password = '';
-        this.reg_password_again = '';
     }
 
     register() {

@@ -1,0 +1,110 @@
+<div class="container">
+    <h4 class="text-center my-5">Állapot felvétele</h4>
+    <div class="row justify-content-center align-items-center">
+        <div class="col-md-10">
+            <div class="form-container text-center">
+                <mat-form-field [formGroup]="addConditionForm" class="w-100">
+                    <mat-label>állapot típusa</mat-label>
+                    <mat-select
+                        formControlName="condType"
+                        (change)="getTypeValue()"
+                    >
+                        <mat-option [value]="'allergia'">allergia</mat-option>
+                        <mat-option [value]="'gyógyszer'">gyógyszer</mat-option>
+                        <mat-option [value]="'protokoll'">protokoll</mat-option>
+                        <mat-option [value]="'vizsgálat'"
+                            >orvosi vizsgálat</mat-option
+                        >
+                    </mat-select>
+                </mat-form-field>
+                <ng-container *ngIf="getTypeValue() === 'allergia'">
+                    <mat-form-field
+                        [formGroup]="addConditionForm"
+                        class="w-100"
+                    >
+                        <mat-label>megnevezés</mat-label>
+                        <input
+                            matInput
+                            required
+                            formControlName="allergyName"
+                        />
+                    </mat-form-field>
+                </ng-container>
+                <ng-container *ngIf="getTypeValue() === 'gyógyszer'">
+                    <mat-form-field
+                        [formGroup]="addConditionForm"
+                        class="w-100"
+                    >
+                        <mat-label>gyógyszer neve</mat-label>
+                        <input matInput formControlName="medicineName" />
+                    </mat-form-field>
+                    <mat-form-field
+                        [formGroup]="addConditionForm"
+                        class="w-100"
+                    >
+                        <mat-label>adagolás vége</mat-label>
+                        <input
+                            matInput
+                            [matDatepicker]="picker"
+                            formControlName="medicineEndDate"
+                        />
+                        <mat-datepicker-toggle
+                            matIconSuffix
+                            [for]="picker"
+                        ></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+                    <mat-form-field [formGroup]="addConditionForm" class="w-50">
+                        <mat-label>gyakoriság</mat-label>
+                        <input
+                            matInput
+                            type="number"
+                            min="1"
+                            max="99"
+                            formControlName="medicineFreq"
+                        />
+                    </mat-form-field>
+                    <mat-form-field [formGroup]="addConditionForm" class="w-50">
+                        <mat-label></mat-label>
+                        <mat-select formControlName="medicineFreqUnit">
+                            <mat-option [value]="'naponta'">naponta</mat-option>
+                            <mat-option [value]="'hetente'">hetente</mat-option>
+                            <mat-option [value]="'havonta'">havonta</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field
+                        [formGroup]="addConditionForm"
+                        class="w-100"
+                    >
+                        <mat-label>Leírás</mat-label>
+                        <textarea
+                            matInput
+                            maxlength="120"
+                            rows="4"
+                            placeholder="További tudnivalók a gyógyszerről"
+                            formControlName="medicineDesc"
+                        ></textarea>
+                    </mat-form-field>
+                </ng-container>
+                <div class="mt-4 w-100 d-flex justify-content-between">
+                    <button
+                        class="mx-2"
+                        color="primary"
+                        mat-raised-button
+                        type="submit"
+                        (click)="addCondition()"
+                    >
+                        Hozzáadás
+                    </button>
+                    <button
+                        class="mx-2"
+                        mat-raised-button
+                        (click)="closeDialog()"
+                    >
+                        Mégsem
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

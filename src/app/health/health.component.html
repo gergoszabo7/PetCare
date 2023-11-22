@@ -1,0 +1,49 @@
+<div class="my-4 mx-4">
+    <div class="row">
+        <div class="col-md-2">
+            <mat-card
+                *ngFor="let pet of myPets; let i = index"
+                [class.selected]="pet.id === selectedPetId"
+                (click)="showData(pet.id)"
+            >
+                <mat-card-content>{{ pet.name }}</mat-card-content>
+            </mat-card>
+        </div>
+        <div
+            class="col-md-8 my-3 ms-5"
+            *ngIf="this.petId.length > 0; else defaultTemplate"
+        >
+            <h4>Súly</h4>
+            <mat-divider></mat-divider>
+            <h4>Kötelező oltások</h4>
+            <mat-divider></mat-divider>
+            <h4>Allergia</h4>
+            <mat-divider></mat-divider>
+            <h4>Gyógyszerek</h4>
+            <mat-divider></mat-divider>
+            <h4>Orvosi vizsgálatok</h4>
+            <mat-divider></mat-divider>
+            <h4>Protokollok</h4>
+            {{ this.petId }}
+        </div>
+        <ng-template #defaultTemplate>
+            <div class="col-md-8 my-3 ms-5">
+                <p class="text-center">
+                    Válassza ki a megjeleníteni kívánt háziállatot!
+                </p>
+            </div>
+        </ng-template>
+    </div>
+</div>
+<div class="add-button-container">
+    <button
+        mat-fab
+        extended
+        color="accent"
+        (click)="addCondition()"
+        aria-label="Állapot hozzáadása"
+    >
+        <mat-icon>add</mat-icon>
+        Állapot felvétele
+    </button>
+</div>

@@ -66,7 +66,7 @@ export class ViewPetComponent implements OnInit {
         });
     }
 
-    addStatus() {
+    viewPublicProfile(): void {
         console.log();
     }
 

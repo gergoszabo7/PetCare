@@ -3,15 +3,6 @@
     bottom: 48px;
     right: 48px;
     z-index: 2;
-    button {
-        height:64px !important;
-        width:64px !important;
-    }
-    ::ng-deep .mat-icon{
-      height:64px !important;
-      width:64px !important;
-      font-size:64px !important;
-  }
 }
 
 .mat-mdc-unelevated-button {
@@ -46,6 +37,7 @@
   }
   mat-card {
     background-color: rgba(74,173,82,0.8);
+      border-radius: 30px;
     height: 100%;
     width: 80%;
   }
@@ -59,15 +51,6 @@
     width:24px !important;
     font-size:1.5rem !important;
 }
-  button:hover {
-    background-color: white;
-    .edit {
-      color: rgba(0, 0, 255);
-    }
-    .delete {
-      color: rgba(255, 0, 0);
-    }
-  }
   .todo {
     font-size: 1.2rem;
   }
@@ -81,7 +64,7 @@
 
 .mat-card-container:hover {
   mat-card:hover {
-    background-color: rgba(76, 168, 83, 0.85);
+    background-color: rgba(76, 168, 83, 0.8);
     cursor: pointer;
   }
 }

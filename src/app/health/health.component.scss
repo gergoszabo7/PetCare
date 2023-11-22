@@ -1,0 +1,41 @@
+@use '/src/styles/palette.scss' as colors;
+
+* {
+    overflow-x: hidden !important;
+}
+
+h4 {
+    margin: 2rem 0;
+    text-align: center;
+    font-weight: 600;
+    opacity: 0.6;
+}
+
+p {
+    font-size: 1.2rem;
+    opacity: 0.3;
+    font-weight: 600;
+}
+
+mat-card {
+    font-size: 1.25rem;
+    background-color: rgba(144,202,249,0.6)
+}
+
+mat-card.selected {
+    background-color: colors.$petcare-accent;
+    font-weight: 600;
+    opacity: 1;
+}
+
+mat-card:hover {
+    cursor: pointer;
+}
+
+.add-button-container {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    z-index: 2;
+    padding: 10px;
+}

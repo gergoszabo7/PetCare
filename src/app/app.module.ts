@@ -33,6 +33,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { ViewPetComponent } from './overview/view-pet/view-pet.component';
 import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
+import { HealthComponent } from './health/health.component';
+import { NewConditionDialogComponent } from './dialogs/new-condition-dialog/new-condition-dialog.component';
 
 registerLocaleData(localeHu);
 @NgModule({
@@ -42,8 +44,11 @@ registerLocaleData(localeHu);
         OverviewComponent,
         HeaderComponent,
         NewPetDialogComponent,
+        NewConditionDialogComponent,
         ViewPetComponent,
         ConfirmDialogComponent,
+        HealthComponent,
+        NewConditionDialogComponent,
     ],
     imports: [
         BrowserModule,

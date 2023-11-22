@@ -1,10 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Auth, getAuth } from 'firebase/auth';
-import { AuthService } from '../../shared/auth.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { Pet } from '../../models/pet.model';
 import { FirebaseCrudService } from '../../shared/firebase-crud.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { NewPetDialogComponent } from '../../dialogs/new-pet-dialog/new-pet-dialog.component';
 
@@ -20,11 +18,9 @@ export class OverviewComponent implements OnInit {
     pet: Pet;
 
     constructor(
-        private authService: AuthService,
         private router: Router,
         private firebaseCrudService: FirebaseCrudService,
-        private dialog: MatDialog,
-        private fb: FormBuilder
+        private dialog: MatDialog
     ) {}
 
     ngOnInit(): void {

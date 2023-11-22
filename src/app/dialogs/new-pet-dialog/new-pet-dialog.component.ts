@@ -2,15 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
-import { Router } from '@angular/router';
 import { Auth, getAuth } from 'firebase/auth';
 import { Observable, ReplaySubject, map, startWith } from 'rxjs';
 import { Breed } from 'src/app/models/breed.model';
 import { Pet } from 'src/app/models/pet.model';
-import { AuthService } from 'src/app/shared/auth.service';
 import { FirebaseCrudService } from 'src/app/shared/firebase-crud.service';
 import { UtilsService } from '../../shared/utils.service';
-import {SnackbarService} from "../../shared/snackbar.service";
+import { SnackbarService } from '../../shared/snackbar.service';
 
 @Component({
     selector: 'app-new-pet-dialog',
@@ -29,13 +27,12 @@ export class NewPetDialogComponent implements OnInit {
     addPetForm: FormGroup;
 
     constructor(
-        private authService: AuthService,
         private firebaseCrudService: FirebaseCrudService,
         private dialogRef: MatDialogRef<NewPetDialogComponent>,
         private http: HttpClient,
         private fb: FormBuilder,
         private utilsService: UtilsService,
-        private snackbarService: SnackbarService,
+        private snackbarService: SnackbarService
     ) {}
 
     ngOnInit(): void {
