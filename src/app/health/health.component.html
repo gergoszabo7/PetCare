@@ -10,21 +10,167 @@
             </mat-card>
         </div>
         <div
-            class="col-md-8 my-3 ms-5"
+            class="col-md-8 mt-3 ms-5 mb-5"
             *ngIf="this.petId.length > 0; else defaultTemplate"
         >
             <h4>Súly</h4>
             <mat-divider></mat-divider>
-            <h4>Kötelező oltások</h4>
-            <mat-divider></mat-divider>
             <h4>Allergia</h4>
+            <div class="d-flex justify-content-center align-items-center">
+                <ng-container
+                    *ngIf="allergies.length === 0; else allergiesTemplate"
+                >
+                    <h3 class="mb-4">Nincs ismert allergia</h3>
+                </ng-container>
+                <ng-template #allergiesTemplate>
+                    <mat-chip-set
+                        *ngFor="let allergy of allergies"
+                        class="mb-4"
+                    >
+                        <mat-chip class="mx-2">
+                            {{ allergy.allergyName }}
+                        </mat-chip>
+                    </mat-chip-set>
+                </ng-template>
+            </div>
             <mat-divider></mat-divider>
             <h4>Gyógyszerek</h4>
+            <div class="row-cols-1 justify-content-center align-items-center">
+                <ng-container
+                    *ngIf="medicines.length === 0; else medicinesTemplate"
+                >
+                    <h3 class="mb-4 text-center">Nincs felvett gyógyszer</h3>
+                </ng-container>
+                <ng-template #medicinesTemplate>
+                    <mat-expansion-panel
+                        *ngFor="let medicine of medicines"
+                        hideToggle
+                    >
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                {{ medicine.medicineName }}
+                            </mat-panel-title>
+                            <mat-panel-description class="timer">
+                                {{
+                                    "Következő adag: " +
+                                        getNextDose(
+                                            medicine.medicineStartDate,
+                                            medicine.medicineEndDate,
+                                            medicine.medicineFreq,
+                                            medicine.medicineFreqUnit
+                                        )
+                                }}
+                            </mat-panel-description>
+                            <div class="fst-italic">
+                                {{
+                                    medicine.medicineFreq > 1
+                                        ? medicine.medicineFreq +
+                                          " " +
+                                          medicine.medicineFreqUnit
+                                        : medicine.medicineFreqUnit
+                                }}
+                            </div>
+                            <div class="mx-5">
+                                {{ medicine.medicineStartDate + "-tól" }}
+                            </div>
+                            <div>
+                                {{ medicine.medicineEndDate + "-ig" }}
+                            </div>
+                        </mat-expansion-panel-header>
+                        <div class="expansion-desc">
+                            {{
+                                medicine.medicineDesc.length > 0
+                                    ? medicine.medicineDesc
+                                    : "Nincs további leírás"
+                            }}
+                        </div>
+                    </mat-expansion-panel>
+                </ng-template>
+            </div>
             <mat-divider></mat-divider>
             <h4>Orvosi vizsgálatok</h4>
+            <div class="row-cols-1 justify-content-center align-items-center">
+                <ng-container
+                    *ngIf="examinations.length === 0; else examinationsTemplate"
+                >
+                    <h3 class="mb-4 text-center">
+                        Nincs orvosi vizsgálat rögzítve
+                    </h3>
+                </ng-container>
+                <ng-template #examinationsTemplate>
+                    <mat-expansion-panel
+                        *ngFor="let exam of examinations"
+                        hideToggle
+                    >
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                {{ exam.examinationName }}
+                            </mat-panel-title>
+                            <mat-panel-description class="timer">
+                                {{ getNextExamination(exam.examinationDate) }}
+                            </mat-panel-description>
+                            <div class="mx-5">
+                                {{
+                                    "Vizsgálat időpontja: " +
+                                        exam.examinationDate
+                                }}
+                            </div>
+                        </mat-expansion-panel-header>
+                        <div class="expansion-desc">
+                            {{
+                                exam.examinationDesc.length > 0
+                                    ? exam.examinationDesc
+                                    : "Nincs további leírás"
+                            }}
+                        </div>
+                    </mat-expansion-panel>
+                </ng-template>
+            </div>
             <mat-divider></mat-divider>
             <h4>Protokollok</h4>
-            {{ this.petId }}
+            <div class="row-cols-1 justify-content-center align-items-center">
+                <ng-container
+                    *ngIf="protocols.length === 0; else protocolTemplate"
+                >
+                    <h3 class="mb-4 text-center">Nincs protokoll rögzítve</h3>
+                </ng-container>
+                <ng-template #protocolTemplate>
+                    <mat-expansion-panel
+                        *ngFor="let protocol of protocols"
+                        hideToggle
+                    >
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                {{ protocol.protocolName }}
+                            </mat-panel-title>
+                            <mat-panel-description class="timer">
+                                {{
+                                    getNextDose(
+                                        todayDate.toDateString(),
+                                        "2100.01.01",
+                                        protocol.protocolFreq,
+                                        protocol.protocolFreqUnit
+                                    )
+                                }}
+                            </mat-panel-description>
+                            <div class="mx-5">
+                                {{
+                                    protocol.protocolFreq +
+                                        " " +
+                                        protocol.protocolFreqUnit
+                                }}
+                            </div>
+                        </mat-expansion-panel-header>
+                        <div class="expansion-desc">
+                            {{
+                                protocol.protocolDesc.length > 0
+                                    ? protocol.protocolDesc
+                                    : "Nincs további leírás"
+                            }}
+                        </div>
+                    </mat-expansion-panel>
+                </ng-template>
+            </div>
         </div>
         <ng-template #defaultTemplate>
             <div class="col-md-8 my-3 ms-5">
@@ -35,7 +181,7 @@
         </ng-template>
     </div>
 </div>
-<div class="add-button-container">
+<div class="add-button-container" *ngIf="selectedPetId">
     <button
         mat-fab
         extended

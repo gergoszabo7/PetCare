@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import { Auth, getAuth } from 'firebase/auth';
 import { Pet } from 'src/app/models/pet.model';
 import { FirebaseCrudService } from 'src/app/shared/firebase-crud.service';
@@ -22,8 +22,9 @@ export class NewConditionDialogComponent implements OnInit {
         private firebaseCrudService: FirebaseCrudService,
         private dialogRef: MatDialogRef<NewConditionDialogComponent>,
         private fb: FormBuilder,
+        private snackbarService: SnackbarService,
         private utilsService: UtilsService,
-        private snackbarService: SnackbarService
+        @Inject(MAT_DIALOG_DATA) public data: string
     ) {}
 
     ngOnInit(): void {
@@ -46,14 +47,12 @@ export class NewConditionDialogComponent implements OnInit {
     }
 
     private createDynamicFormControls(conditionType: string): void {
-        // Clear existing form controls
         Object.keys(this.addConditionForm.controls).forEach((key) => {
             if (key !== 'condType') {
                 this.addConditionForm.removeControl(key);
             }
         });
 
-        // Create form controls based on condition type
         if (conditionType === 'allergia') {
             this.addConditionForm.addControl(
                 'allergyName',
@@ -63,6 +62,10 @@ export class NewConditionDialogComponent implements OnInit {
             this.addConditionForm.addControl(
                 'medicineName',
                 this.fb.control('', Validators.required)
+            );
+            this.addConditionForm.addControl(
+                'medicineStartDate',
+                this.fb.control(new Date(), Validators.required)
             );
             this.addConditionForm.addControl(
                 'medicineEndDate',
@@ -80,6 +83,36 @@ export class NewConditionDialogComponent implements OnInit {
                 'medicineDesc',
                 this.fb.control('')
             );
+        } else if (conditionType === 'protokoll') {
+            this.addConditionForm.addControl(
+                'protocolName',
+                this.fb.control('', Validators.required)
+            );
+            this.addConditionForm.addControl(
+                'protocolFreq',
+                this.fb.control('', Validators.required)
+            );
+            this.addConditionForm.addControl(
+                'protocolFreqUnit',
+                this.fb.control('', Validators.required)
+            );
+            this.addConditionForm.addControl(
+                'protocolDesc',
+                this.fb.control('')
+            );
+        } else if (conditionType === 'vizsgálat') {
+            this.addConditionForm.addControl(
+                'examinationName',
+                this.fb.control('', Validators.required)
+            );
+            this.addConditionForm.addControl(
+                'examinationDate',
+                this.fb.control('', Validators.required)
+            );
+            this.addConditionForm.addControl(
+                'examinationDesc',
+                this.fb.control('')
+            );
         }
     }
 
@@ -92,21 +125,27 @@ export class NewConditionDialogComponent implements OnInit {
             );
             return;
         }
-        // const formattedBirthDate = this.utilsService.formatDate(
-        //     this.addPetForm.get('birth')?.value
-        // );
-        // this.pet = {
-        //     name: this.addPetForm.get('name')?.value,
-        //     birth: formattedBirthDate,
-        //     weight: this.addPetForm.get('weight')?.value,
-        //     petType: this.addPetForm.get('petType')?.value,
-        //     breed: this.addPetForm.get('breed')?.value,
-        //     sex: this.addPetForm.get('sex')?.value,
-        //     color: this.addPetForm.get('color')?.value,
-        //     userId: this.auth.currentUser.uid,
-        // };
-        // this.firebaseCrudService.createPet(this.pet);
-        // this.closeDialog();
+        const dialogData = {
+            ...this.addConditionForm.value,
+            petId: this.data,
+        };
+        if (
+            this.addConditionForm.get('medicineEndDate') &&
+            this.addConditionForm.get('medicineStartDate')
+        ) {
+            dialogData.medicineEndDate = this.utilsService.formatDate(
+                dialogData.medicineEndDate
+            );
+            dialogData.medicineStartDate = this.utilsService.formatDate(
+                dialogData.medicineStartDate
+            );
+        } else if (this.addConditionForm.get('examinationDate')) {
+            dialogData.examinationDate = this.utilsService.formatDate(
+                dialogData.examinationDate
+            );
+        }
+        this.firebaseCrudService.createCondition(dialogData);
+        this.closeDialog();
     }
 
     closeDialog() {

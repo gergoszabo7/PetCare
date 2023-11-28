@@ -42,17 +42,33 @@
                         [formGroup]="addConditionForm"
                         class="w-100"
                     >
-                        <mat-label>adagolás vége</mat-label>
+                        <mat-label>adagolás kezdete</mat-label>
                         <input
                             matInput
                             [matDatepicker]="picker"
-                            formControlName="medicineEndDate"
+                            formControlName="medicineStartDate"
                         />
                         <mat-datepicker-toggle
                             matIconSuffix
                             [for]="picker"
                         ></mat-datepicker-toggle>
                         <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+                    <mat-form-field
+                        [formGroup]="addConditionForm"
+                        class="w-100"
+                    >
+                        <mat-label>adagolás vége</mat-label>
+                        <input
+                            matInput
+                            [matDatepicker]="picker2"
+                            formControlName="medicineEndDate"
+                        />
+                        <mat-datepicker-toggle
+                            matIconSuffix
+                            [for]="picker2"
+                        ></mat-datepicker-toggle>
+                        <mat-datepicker #picker2></mat-datepicker>
                     </mat-form-field>
                     <mat-form-field [formGroup]="addConditionForm" class="w-50">
                         <mat-label>gyakoriság</mat-label>
@@ -76,13 +92,91 @@
                         [formGroup]="addConditionForm"
                         class="w-100"
                     >
-                        <mat-label>Leírás</mat-label>
+                        <mat-label>leírás</mat-label>
                         <textarea
                             matInput
                             maxlength="120"
                             rows="4"
                             placeholder="További tudnivalók a gyógyszerről"
                             formControlName="medicineDesc"
+                        ></textarea>
+                    </mat-form-field>
+                </ng-container>
+                <ng-container *ngIf="getTypeValue() === 'protokoll'">
+                    <mat-form-field
+                        [formGroup]="addConditionForm"
+                        class="w-100"
+                    >
+                        <mat-label>protokoll neve</mat-label>
+                        <input matInput formControlName="protocolName" />
+                    </mat-form-field>
+                    <mat-form-field [formGroup]="addConditionForm" class="w-50">
+                        <mat-label>gyakoriság</mat-label>
+                        <input
+                            matInput
+                            type="number"
+                            min="1"
+                            max="99"
+                            formControlName="protocolFreq"
+                        />
+                    </mat-form-field>
+                    <mat-form-field [formGroup]="addConditionForm" class="w-50">
+                        <mat-label></mat-label>
+                        <mat-select formControlName="protocolFreqUnit">
+                            <mat-option [value]="'naponta'">naponta</mat-option>
+                            <mat-option [value]="'hetente'">hetente</mat-option>
+                            <mat-option [value]="'havonta'">havonta</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field
+                        [formGroup]="addConditionForm"
+                        class="w-100"
+                    >
+                        <mat-label>leírás</mat-label>
+                        <textarea
+                            matInput
+                            maxlength="120"
+                            rows="4"
+                            placeholder="Protokoll leírása"
+                            formControlName="protocolDesc"
+                        ></textarea>
+                    </mat-form-field>
+                </ng-container>
+                <ng-container *ngIf="getTypeValue() === 'vizsgálat'">
+                    <mat-form-field
+                        [formGroup]="addConditionForm"
+                        class="w-100"
+                    >
+                        <mat-label>vizsgálat megnevezése</mat-label>
+                        <input matInput formControlName="examinationName" />
+                    </mat-form-field>
+                    <mat-form-field
+                        [formGroup]="addConditionForm"
+                        class="w-100"
+                    >
+                        <mat-label>vizsgálat időpontja</mat-label>
+                        <input
+                            matInput
+                            [matDatepicker]="picker"
+                            formControlName="examinationDate"
+                        />
+                        <mat-datepicker-toggle
+                            matIconSuffix
+                            [for]="picker"
+                        ></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+                    <mat-form-field
+                        [formGroup]="addConditionForm"
+                        class="w-100"
+                    >
+                        <mat-label>leírás</mat-label>
+                        <textarea
+                            matInput
+                            maxlength="120"
+                            rows="4"
+                            placeholder="Orvosi vizsgálat leírása"
+                            formControlName="examinationDesc"
                         ></textarea>
                     </mat-form-field>
                 </ng-container>

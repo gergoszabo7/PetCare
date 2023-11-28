@@ -63,4 +63,21 @@ export class FirebaseCrudService {
             );
         });
     }
+
+    createCondition(cond: any) {
+        const condRef = collection(this.db, 'conditions');
+        addDoc(condRef, cond).then(() => {
+            this.snackbarService.openSnackBar(
+                'Állapot sikeresen hozzáadva!',
+                undefined,
+                { duration: 3000, panelClass: ['green-snackbar'] }
+            );
+        });
+    }
+
+    listConditionsForPet(petId: string) {
+        const condRef = collection(this.db, 'conditions');
+        const q = query(condRef, where('petId', '==', petId));
+        return getDocs(q);
+    }
 }

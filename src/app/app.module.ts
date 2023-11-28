@@ -35,6 +35,9 @@ import { ViewPetComponent } from './overview/view-pet/view-pet.component';
 import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
 import { HealthComponent } from './health/health.component';
 import { NewConditionDialogComponent } from './dialogs/new-condition-dialog/new-condition-dialog.component';
+import {MatListModule} from "@angular/material/list";
+import {MatChipsModule} from "@angular/material/chips";
+import {MatExpansionModule} from "@angular/material/expansion";
 
 registerLocaleData(localeHu);
 @NgModule({
@@ -74,6 +77,9 @@ registerLocaleData(localeHu);
         provideFirebaseApp(() => initializeApp(environment.firebase)),
         provideAuth(() => getAuth()),
         provideFirestore(() => getFirestore()),
+        MatListModule,
+        MatChipsModule,
+        MatExpansionModule,
     ],
     exports: [RouterModule],
     providers: [
