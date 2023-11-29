@@ -110,6 +110,22 @@
                         <mat-label>protokoll neve</mat-label>
                         <input matInput formControlName="protocolName" />
                     </mat-form-field>
+                    <mat-form-field
+                        [formGroup]="addConditionForm"
+                        class="w-100"
+                    >
+                        <mat-label>kezdő dátum</mat-label>
+                        <input
+                            matInput
+                            [matDatepicker]="picker3"
+                            formControlName="protocolStartDate"
+                        />
+                        <mat-datepicker-toggle
+                            matIconSuffix
+                            [for]="picker3"
+                        ></mat-datepicker-toggle>
+                        <mat-datepicker #picker3></mat-datepicker>
+                    </mat-form-field>
                     <mat-form-field [formGroup]="addConditionForm" class="w-50">
                         <mat-label>gyakoriság</mat-label>
                         <input
@@ -158,7 +174,7 @@
                         <input
                             matInput
                             [matDatepicker]="picker"
-                            formControlName="examinationDate"
+                            formControlName="dueDate"
                         />
                         <mat-datepicker-toggle
                             matIconSuffix

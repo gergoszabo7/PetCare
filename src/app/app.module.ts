@@ -38,6 +38,7 @@ import { NewConditionDialogComponent } from './dialogs/new-condition-dialog/new-
 import {MatListModule} from "@angular/material/list";
 import {MatChipsModule} from "@angular/material/chips";
 import {MatExpansionModule} from "@angular/material/expansion";
+import {MatCheckboxModule} from "@angular/material/checkbox";
 
 registerLocaleData(localeHu);
 @NgModule({
@@ -80,6 +81,7 @@ registerLocaleData(localeHu);
         MatListModule,
         MatChipsModule,
         MatExpansionModule,
+        MatCheckboxModule,
     ],
     exports: [RouterModule],
     providers: [

@@ -1,81 +1,115 @@
-<p>Bejelentkezve: {{ this.user }}</p>
-
-<div class="mat-card-container my-5" *ngFor="let myPet of myPets">
-    <mat-card class="mat-card" (click)="editPet(myPet)">
-        <mat-card-header class="mx-auto mb-5 mt-3">
-            <mat-card-title class="text-center"
-                ><h4>{{ myPet.name }}</h4></mat-card-title
-            >
-        </mat-card-header>
-        <mat-card-content>
-            <div class="row">
-                <div class="col-md-3 mb-5 mx-4">
-                    <div>
-                        <img
-                            [src]="'/assets/default-image.png'"
-                            alt="Pet Image"
-                        />
+<ng-container *ngIf="myPets.length === 0; else petsTemplate">
+    <div
+        class="my-4 add-pet-message text-center d-flex justify-content-center align-items-center"
+    >
+        <p class="text-center">
+            Hozzon létre új háziállatot a "Háziállat hozzáadása" gombbal!
+        </p>
+    </div>
+</ng-container>
+<ng-template #petsTemplate>
+    <div class="mat-card-container my-5" *ngFor="let myPet of myPets">
+        <mat-card class="mat-card" (click)="editPet(myPet)">
+            <mat-card-header class="mx-auto mb-5 mt-3">
+                <mat-card-title class="text-center"
+                    ><h4>{{ myPet.name }}</h4></mat-card-title
+                >
+            </mat-card-header>
+            <mat-card-content>
+                <div class="row">
+                    <div class="col-md-3 mb-5 mx-4">
+                        <div>
+                            <img
+                                [src]="'/assets/default-image.png'"
+                                alt="Pet Image"
+                            />
+                        </div>
                     </div>
-                </div>
-                <div class="col-md-8">
-                    <div class="row my-3 me-5">
-                        <div class="col-md-3 col-sm-12 mx-5">
-                            <label>Faj</label>
-                            <p>{{ myPet.petType }}</p>
+                    <div class="col-md-8">
+                        <div class="row my-3 me-5">
+                            <div class="col-md-3 col-sm-12 mx-5">
+                                <label>Faj</label>
+                                <p>{{ myPet.petType }}</p>
+                            </div>
+                            <div class="col-md-3 col-sm-12 ms-5">
+                                <label>Súly</label>
+                                <p>
+                                    {{
+                                        myPet.weight
+                                            ? myPet.weight + " kg"
+                                            : "Nincs megadva"
+                                    }}
+                                </p>
+                            </div>
                         </div>
-                        <div class="col-md-3 col-sm-12 ms-5">
-                            <label>Súly</label>
-                            <p>
-                                {{
-                                    myPet.weight
-                                        ? myPet.weight + " kg"
-                                        : "Nincs megadva"
-                                }}
-                            </p>
+                        <div class="row my-3 me-5">
+                            <div class="col-md-3 mx-5">
+                                <label>Fajta</label>
+                                <p>{{ myPet.breed }}</p>
+                            </div>
+                            <div class="col-md-3 col-sm-12 ms-5">
+                                <label>Nem</label>
+                                <p>{{ myPet.sex }}</p>
+                            </div>
                         </div>
-                        <div class="col-md-3 todo ms-5">
+                        <div class="row my-3 me-5">
+                            <div class="col-md-3 col-sm-12 mx-5">
+                                <label>Szín</label>
+                                <p>
+                                    {{
+                                        myPet.color
+                                            ? myPet.color
+                                            : "Nincs megadva"
+                                    }}
+                                </p>
+                            </div>
+                            <div class="col-md-3 col-sm-12 ms-5">
+                                <label>Életkor</label>
+                                <p>
+                                    {{
+                                        getPetAge(myPet.birth).age
+                                            ? getPetAge(myPet.birth).age + " "
+                                            : ""
+                                    }}{{ getPetAge(myPet.birth).time }}
+                                </p>
+                            </div>
+                        </div>
+                        <div
+                            class="col-md-11 todo ms-5 my-5"
+                            *ngFor="let todo of todos[myPet.id]"
+                        >
                             <ul>
-                                <li>teendő1</li>
-                                <li>teendő2</li>
-                                <li>teendő3</li>
+                                <li *ngIf="todo.condType === 'gyógyszer'">
+                                    {{
+                                        todo.medicineName +
+                                            " bevétele hamarosan: " +
+                                            transformDate(todo.dueDate)
+                                    }}
+                                </li>
+                                <li *ngIf="todo.condType === 'vizsgálat'">
+                                    {{
+                                        "Közelgő vizsgálat: " +
+                                            todo.examinationName +
+                                            ", ekkor: " +
+                                            todo.examinationDate
+                                    }}
+                                </li>
+                                <li *ngIf="todo.condType === 'protokoll'">
+                                    {{
+                                        "Teendő: " +
+                                            todo.protocolName +
+                                            ", ekkor: " +
+                                            transformDate(todo.dueDate)
+                                    }}
+                                </li>
                             </ul>
                         </div>
                     </div>
-                    <div class="row my-3 me-5">
-                        <div class="col-md-3 mx-5">
-                            <label>Fajta</label>
-                            <p>{{ myPet.breed }}</p>
-                        </div>
-                        <div class="col-md-3 col-sm-12 ms-5">
-                            <label>Nem</label>
-                            <p>{{ myPet.sex }}</p>
-                        </div>
-                    </div>
-                    <div class="row my-3 me-5">
-                        <div class="col-md-3 col-sm-12 mx-5">
-                            <label>Szín</label>
-                            <p>
-                                {{
-                                    myPet.color ? myPet.color : "Nincs megadva"
-                                }}
-                            </p>
-                        </div>
-                        <div class="col-md-3 col-sm-12 ms-5">
-                            <label>Életkor</label>
-                            <p>
-                                {{
-                                    getPetAge(myPet.birth).age
-                                        ? getPetAge(myPet.birth).age + " "
-                                        : ""
-                                }}{{ getPetAge(myPet.birth).time }}
-                            </p>
-                        </div>
-                    </div>
                 </div>
-            </div>
-        </mat-card-content>
-    </mat-card>
-</div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</ng-template>
 <div class="add-button-container">
     <button
         mat-fab

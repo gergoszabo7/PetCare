@@ -5,6 +5,7 @@ import { Pet } from '../models/pet.model';
 import { NewPetDialogComponent } from '../dialogs/new-pet-dialog/new-pet-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { NewConditionDialogComponent } from '../dialogs/new-condition-dialog/new-condition-dialog.component';
+import { ConfirmDialogComponent } from '../dialogs/confirm-dialog/confirm-dialog.component';
 
 @Component({
     selector: 'app-health',
@@ -17,6 +18,7 @@ export class HealthComponent implements OnInit {
     myPets = [];
     pet: Pet;
     petId = '';
+    petWeight = 0;
     selectedPetId: string | null = null;
     allergies = [];
     medicines = [];
@@ -64,6 +66,10 @@ export class HealthComponent implements OnInit {
         this.getConditionsForPet(this.selectedPetId);
     }
 
+    setWeight(pet: Pet) {
+        this.petWeight = pet.weight;
+    }
+
     getConditionsForPet(petId: string) {
         const conditions = [];
         this.firebaseCrudService.listConditionsForPet(petId).then((result) => {
@@ -100,7 +106,7 @@ export class HealthComponent implements OnInit {
         );
 
         if (currentDate > endDate) {
-            return 'nincs';
+            return 'lezárult';
         }
 
         let nextDoseDate: Date;
@@ -109,12 +115,7 @@ export class HealthComponent implements OnInit {
             case 'naponta':
                 nextDoseDate = new Date(
                     startDate.getTime() +
-                        Math.ceil((daysSinceStart + 1) / freq) *
-                            freq *
-                            24 *
-                            60 *
-                            60 *
-                            1000
+                    Math.ceil((daysSinceStart + 1) / freq) * freq * 24 * 60 * 60 * 1000
                 );
                 break;
             case 'hetente':
@@ -133,10 +134,32 @@ export class HealthComponent implements OnInit {
             default:
                 return 'Hibás időmértékegység';
         }
+
+        if (nextDoseDate <= currentDate) {
+            while (nextDoseDate <= currentDate) {
+                switch (fUnit) {
+                    case 'naponta':
+                        nextDoseDate = new Date(
+                            nextDoseDate.getTime() + freq * 24 * 60 * 60 * 1000
+                        );
+                        break;
+                    case 'hetente':
+                        nextDoseDate = new Date(
+                            nextDoseDate.getTime() + 7 * freq * 24 * 60 * 60 * 1000
+                        );
+                        break;
+                    case 'havonta':
+                        nextDoseDate.setMonth(nextDoseDate.getMonth() + freq);
+                        break;
+                }
+            }
+        }
+
         const daysUntilNextDose = Math.floor(
             (nextDoseDate.getTime() - currentDate.getTime()) /
                 (1000 * 60 * 60 * 24)
         );
+
         if (daysUntilNextDose === 0) {
             return 'ma';
         } else if (daysUntilNextDose === 1) {
@@ -147,15 +170,14 @@ export class HealthComponent implements OnInit {
     }
 
     getNextExamination(date: string): string {
-        const examinationDate = new Date(date);
+        const dueDate = new Date(date);
         const currentDate = new Date();
 
-        examinationDate.setHours(0, 0, 0, 0);
+        dueDate.setHours(0, 0, 0, 0);
         currentDate.setHours(0, 0, 0, 0);
 
         const daysUntilExamination = Math.floor(
-            (examinationDate.getTime() - currentDate.getTime()) /
-                (1000 * 60 * 60 * 24)
+            (dueDate.getTime() - currentDate.getTime()) / (1000 * 60 * 60 * 24)
         );
 
         if (daysUntilExamination === 0) {
@@ -167,5 +189,22 @@ export class HealthComponent implements OnInit {
         } else {
             return '';
         }
+    }
+
+    deleteCondition(condId: string): void {
+        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+            data: {
+                title: 'Állapot törlése',
+                message: 'Biztosan töröli ezt az állapotot?',
+            },
+        });
+
+        dialogRef.afterClosed().subscribe((result) => {
+            if (result) {
+                this.firebaseCrudService.deleteCondition(condId, () =>
+                    this.showData(this.selectedPetId)
+                );
+            }
+        });
     }
 }

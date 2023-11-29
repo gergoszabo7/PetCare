@@ -55,3 +55,21 @@ mat-card:hover {
     color: #3B3B98;
     font-weight: 600;
 }
+
+
+.weight-desc {
+    font-style: italic;
+    span {
+        font-style: normal;
+        font-weight: 600;
+    }
+}
+
+.chip-cancel {
+    opacity: 0.1;
+}
+
+.chip-cancel:hover {
+    opacity: 0.9;
+    color: colors.$petcare-warn !important;
+}

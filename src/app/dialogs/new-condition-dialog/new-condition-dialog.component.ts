@@ -1,6 +1,6 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Auth, getAuth } from 'firebase/auth';
 import { Pet } from 'src/app/models/pet.model';
 import { FirebaseCrudService } from 'src/app/shared/firebase-crud.service';
@@ -89,6 +89,10 @@ export class NewConditionDialogComponent implements OnInit {
                 this.fb.control('', Validators.required)
             );
             this.addConditionForm.addControl(
+                'protocolStartDate',
+                this.fb.control(new Date(), Validators.required)
+            );
+            this.addConditionForm.addControl(
                 'protocolFreq',
                 this.fb.control('', Validators.required)
             );
@@ -106,7 +110,7 @@ export class NewConditionDialogComponent implements OnInit {
                 this.fb.control('', Validators.required)
             );
             this.addConditionForm.addControl(
-                'examinationDate',
+                'dueDate',
                 this.fb.control('', Validators.required)
             );
             this.addConditionForm.addControl(
@@ -139,9 +143,13 @@ export class NewConditionDialogComponent implements OnInit {
             dialogData.medicineStartDate = this.utilsService.formatDate(
                 dialogData.medicineStartDate
             );
-        } else if (this.addConditionForm.get('examinationDate')) {
-            dialogData.examinationDate = this.utilsService.formatDate(
-                dialogData.examinationDate
+        } else if (this.addConditionForm.get('dueDate')) {
+            dialogData.dueDate = this.utilsService.formatDate(
+                dialogData.dueDate
+            );
+        } else if (this.addConditionForm.get('protocolStartDate')) {
+            dialogData.protocolStartDate = this.utilsService.formatDate(
+                dialogData.protocolStartDate
             );
         }
         this.firebaseCrudService.createCondition(dialogData);

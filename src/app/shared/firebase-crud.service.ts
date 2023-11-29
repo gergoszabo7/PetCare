@@ -12,7 +12,8 @@ import {
 import { Pet } from '../models/pet.model';
 import { SnackbarService } from './snackbar.service';
 import { Router } from '@angular/router';
-import { doc } from '@angular/fire/firestore';
+import { doc, getDoc } from '@angular/fire/firestore';
+import {user} from "@angular/fire/auth";
 
 @Injectable({
     providedIn: 'root',
@@ -78,6 +79,100 @@ export class FirebaseCrudService {
     listConditionsForPet(petId: string) {
         const condRef = collection(this.db, 'conditions');
         const q = query(condRef, where('petId', '==', petId));
+        return getDocs(q);
+    }
+
+    listConditionsForPetAndToDo(petId: string) {
+        const condRef = collection(this.db, 'conditions');
+        const q = query(
+            condRef,
+            where('petId', '==', petId),
+            where('condType', '!=', 'allergia')
+        );
+
+        return getDocs(q).then((querySnapshot) => {
+            const conditionsWithDueDate: any[] = [];
+
+            querySnapshot.forEach((doc) => {
+                const condType = doc.data()['condType'];
+
+                let dueDate;
+                if (condType === 'gyógyszer') {
+                    const startDate = new Date(doc.data()['medicineStartDate']);
+                    const freq = doc.data()['medicineFreq'];
+                    const freqUnit = doc.data()['medicineFreqUnit'];
+
+                    dueDate = this.getNextDose(startDate, freq, freqUnit);
+                } else if (condType === 'protokoll') {
+                    const startDate = new Date(doc.data()['protocolStartDate']);
+                    const freq = doc.data()['protocolFreq'];
+                    const freqUnit = doc.data()['protocolFreqUnit'];
+
+                    dueDate = this.getNextDose(startDate, freq, freqUnit);
+                } else if (condType === 'vizsgálat') {
+                    dueDate = doc.data()['dueDate'];
+                }
+
+                const docWithDueDate = { id: doc.id, ...doc.data(), dueDate };
+                conditionsWithDueDate.push(docWithDueDate);
+            });
+
+            conditionsWithDueDate.sort((a, b) => a.dueDate - b.dueDate);
+
+            console.log(conditionsWithDueDate);
+            return conditionsWithDueDate;
+        });
+    }
+
+    getNextDose(startDate: Date, freq: number, freqUnit: string): Date {
+        const currentDate = new Date();
+        let nextDoseDate;
+
+        switch (freqUnit) {
+            case 'naponta':
+                nextDoseDate = new Date(startDate);
+                nextDoseDate.setDate(nextDoseDate.getDate() + freq);
+                break;
+            case 'hetente':
+                nextDoseDate = new Date(startDate);
+                nextDoseDate.setDate(nextDoseDate.getDate() + freq * 7);
+                break;
+            case 'havonta':
+                nextDoseDate = new Date(startDate);
+                nextDoseDate.setMonth(nextDoseDate.getMonth() + freq);
+                break;
+        }
+
+        if (nextDoseDate <= currentDate) {
+            return this.getNextDose(nextDoseDate, freq, freqUnit);
+        }
+
+        return nextDoseDate;
+    }
+
+    deleteCondition(condId: string, callback?: () => void) {
+        const condDoc = doc(this.db, 'conditions', condId);
+        deleteDoc(condDoc).then(() => {
+            this.snackbarService.openSnackBar('Állapot törölve!', undefined, {
+                duration: 3000,
+                panelClass: ['green-snackbar'],
+            });
+            callback();
+        });
+    }
+
+    getUserData(uid: string) {
+        const userRef = doc(this.db, 'users', uid);
+        return getDoc(userRef);
+    }
+
+    getAllUsers(vet: boolean, vetId: string) {
+        const userRef = collection(this.db, 'users');
+        const q = query(
+            userRef,
+            where('isVet', '==', vet),
+            where('vetId', '==', vetId)
+        );
         return getDocs(q);
     }
 }

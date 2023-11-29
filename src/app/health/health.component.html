@@ -4,7 +4,7 @@
             <mat-card
                 *ngFor="let pet of myPets; let i = index"
                 [class.selected]="pet.id === selectedPetId"
-                (click)="showData(pet.id)"
+                (click)="showData(pet.id); setWeight(pet)"
             >
                 <mat-card-content>{{ pet.name }}</mat-card-content>
             </mat-card>
@@ -13,9 +13,22 @@
             class="col-md-8 mt-3 ms-5 mb-5"
             *ngIf="this.petId.length > 0; else defaultTemplate"
         >
-            <h4>Súly</h4>
+            <h4>Súly <mat-icon>fitness_center</mat-icon></h4>
+            <ng-container *ngIf="petWeight < 1; else weightTemplate">
+                <h3 class="mb-4 text-center">Nincs súly megadva</h3>
+            </ng-container>
+            <ng-template #weightTemplate>
+                <div class="text-center mb-4 weight-desc">
+                    <div class="mx-2 my-2">
+                        Súly: <span>{{ petWeight + " kg" }}</span>
+                    </div>
+                    <div class="mx-4 my-4">
+                        Meghatározás: <span>{{ "normál súly" }}</span>
+                    </div>
+                </div>
+            </ng-template>
             <mat-divider></mat-divider>
-            <h4>Allergia</h4>
+            <h4>Allergia <mat-icon>spa</mat-icon></h4>
             <div class="d-flex justify-content-center align-items-center">
                 <ng-container
                     *ngIf="allergies.length === 0; else allergiesTemplate"
@@ -29,12 +42,19 @@
                     >
                         <mat-chip class="mx-2">
                             {{ allergy.allergyName }}
+                            <button
+                                matChipRemove
+                                class="chip-cancel"
+                                (click)="deleteCondition(allergy.id)"
+                            >
+                                <mat-icon>cancel</mat-icon>
+                            </button>
                         </mat-chip>
                     </mat-chip-set>
                 </ng-template>
             </div>
             <mat-divider></mat-divider>
-            <h4>Gyógyszerek</h4>
+            <h4>Gyógyszerek <mat-icon>local_pharmacy</mat-icon></h4>
             <div class="row-cols-1 justify-content-center align-items-center">
                 <ng-container
                     *ngIf="medicines.length === 0; else medicinesTemplate"
@@ -77,18 +97,34 @@
                                 {{ medicine.medicineEndDate + "-ig" }}
                             </div>
                         </mat-expansion-panel-header>
-                        <div class="expansion-desc">
-                            {{
-                                medicine.medicineDesc.length > 0
-                                    ? medicine.medicineDesc
-                                    : "Nincs további leírás"
-                            }}
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-8">
+                                    <div class="expansion-desc">
+                                        {{
+                                            medicine.medicineDesc.length > 0
+                                                ? medicine.medicineDesc
+                                                : "Nincs további leírás"
+                                        }}
+                                    </div>
+                                </div>
+                                <div
+                                    class="col-4 d-flex justify-content-end align-items-center"
+                                >
+                                    <button
+                                        class="btn"
+                                        (click)="deleteCondition(medicine.id)"
+                                    >
+                                        <mat-icon>delete</mat-icon>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </mat-expansion-panel>
                 </ng-template>
             </div>
             <mat-divider></mat-divider>
-            <h4>Orvosi vizsgálatok</h4>
+            <h4>Orvosi vizsgálatok <mat-icon>local_hospital</mat-icon></h4>
             <div class="row-cols-1 justify-content-center align-items-center">
                 <ng-container
                     *ngIf="examinations.length === 0; else examinationsTemplate"
@@ -107,27 +143,40 @@
                                 {{ exam.examinationName }}
                             </mat-panel-title>
                             <mat-panel-description class="timer">
-                                {{ getNextExamination(exam.examinationDate) }}
+                                {{ getNextExamination(exam.dueDate) }}
                             </mat-panel-description>
                             <div class="mx-5">
-                                {{
-                                    "Vizsgálat időpontja: " +
-                                        exam.examinationDate
-                                }}
+                                {{ "Vizsgálat időpontja: " + exam.dueDate }}
                             </div>
                         </mat-expansion-panel-header>
-                        <div class="expansion-desc">
-                            {{
-                                exam.examinationDesc.length > 0
-                                    ? exam.examinationDesc
-                                    : "Nincs további leírás"
-                            }}
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-8">
+                                    <div class="expansion-desc">
+                                        {{
+                                            exam.examinationDesc.length > 0
+                                                ? exam.examinationDesc
+                                                : "Nincs további leírás"
+                                        }}
+                                    </div>
+                                </div>
+                                <div
+                                    class="col-4 d-flex justify-content-end align-items-center"
+                                >
+                                    <button
+                                        class="btn"
+                                        (click)="deleteCondition(exam.id)"
+                                    >
+                                        <mat-icon>delete</mat-icon>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </mat-expansion-panel>
                 </ng-template>
             </div>
             <mat-divider></mat-divider>
-            <h4>Protokollok</h4>
+            <h4>Protokollok <mat-icon>assignment</mat-icon></h4>
             <div class="row-cols-1 justify-content-center align-items-center">
                 <ng-container
                     *ngIf="protocols.length === 0; else protocolTemplate"
@@ -146,7 +195,7 @@
                             <mat-panel-description class="timer">
                                 {{
                                     getNextDose(
-                                        todayDate.toDateString(),
+                                        protocol.protocolStartDate,
                                         "2100.01.01",
                                         protocol.protocolFreq,
                                         protocol.protocolFreqUnit
@@ -161,12 +210,28 @@
                                 }}
                             </div>
                         </mat-expansion-panel-header>
-                        <div class="expansion-desc">
-                            {{
-                                protocol.protocolDesc.length > 0
-                                    ? protocol.protocolDesc
-                                    : "Nincs további leírás"
-                            }}
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-8">
+                                    <div class="expansion-desc">
+                                        {{
+                                            protocol.protocolDesc.length > 0
+                                                ? protocol.protocolDesc
+                                                : "Nincs további leírás"
+                                        }}
+                                    </div>
+                                </div>
+                                <div
+                                    class="col-4 d-flex justify-content-end align-items-center"
+                                >
+                                    <button
+                                        class="btn"
+                                        (click)="deleteCondition(protocol.id)"
+                                    >
+                                        <mat-icon>delete</mat-icon>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </mat-expansion-panel>
                 </ng-template>

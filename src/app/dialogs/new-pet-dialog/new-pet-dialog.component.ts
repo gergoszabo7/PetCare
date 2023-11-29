@@ -24,7 +24,9 @@ export class NewPetDialogComponent implements OnInit {
     searchControl = this.fb.control('');
     formLoaded = false;
     pet: Pet;
+    userData: any;
     addPetForm: FormGroup;
+    owners: { uid: string; email: string }[];
 
     constructor(
         private firebaseCrudService: FirebaseCrudService,
@@ -50,6 +52,8 @@ export class NewPetDialogComponent implements OnInit {
             },
             (error) => console.error('Kutyafajták nem lekérdezhetők:', error)
         );
+        this.getUserDataObject(this.auth.currentUser.uid);
+        this.setAllOwners(this.auth.currentUser.uid);
     }
 
     private initializeForm(): void {
@@ -61,6 +65,7 @@ export class NewPetDialogComponent implements OnInit {
             breed: [null, Validators.required],
             sex: [null, Validators.required],
             color: ['', Validators.required],
+            owner: ['', Validators.required],
         });
     }
 
@@ -100,7 +105,9 @@ export class NewPetDialogComponent implements OnInit {
             breed: this.addPetForm.get('breed')?.value,
             sex: this.addPetForm.get('sex')?.value,
             color: this.addPetForm.get('color')?.value,
-            userId: this.auth.currentUser.uid,
+            userId: this.userData.data.isVet
+                ? this.addPetForm.get('owner')?.value
+                : this.auth.currentUser.uid,
         };
         this.firebaseCrudService.createPet(this.pet);
         this.closeDialog();
@@ -110,14 +117,39 @@ export class NewPetDialogComponent implements OnInit {
         this.dialogRef.close();
     }
 
-    onKey(value: any): void {
-        this.breeds = this.search(value);
-    }
-
     search(value: string) {
         const filter = value.toLowerCase();
         return this.breeds.filter((option) =>
             option.value.toLowerCase().includes(filter)
         );
+    }
+
+    async getUserDataObject(uid: string): Promise<any> {
+        const userSnapshot = await this.firebaseCrudService.getUserData(uid);
+
+        if (userSnapshot.exists()) {
+            const uData = userSnapshot.data();
+            this.userData = {
+                id: userSnapshot.id,
+                data: uData,
+            };
+        }
+    }
+
+    setAllOwners(uid: string): void {
+        this.owners = [];
+
+        this.firebaseCrudService
+            .getAllUsers(false, uid)
+            .then((querySnapshot) => {
+                querySnapshot.forEach((userDoc) => {
+                    const userData = userDoc.data();
+                    const owner: { uid: string; email: string } = {
+                        uid: userDoc.id,
+                        email: userData['email'],
+                    };
+                    this.owners.push(owner);
+                });
+            });
     }
 }

@@ -15,6 +15,7 @@ export class LoginComponent {
     reg_email = '';
     reg_password = '';
     reg_password_again = '';
+    is_vet = false;
 
     loginForm: FormGroup;
 
@@ -71,7 +72,7 @@ export class LoginComponent {
             return;
         }
 
-        this.auth.register(this.reg_email, this.reg_password);
+        this.auth.register(this.reg_email, this.reg_password, this.is_vet);
         this.email = '';
         this.password = '';
         this.reg_email = '';

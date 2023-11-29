@@ -5,6 +5,7 @@ import { Pet } from '../../models/pet.model';
 import { FirebaseCrudService } from '../../shared/firebase-crud.service';
 import { MatDialog } from '@angular/material/dialog';
 import { NewPetDialogComponent } from '../../dialogs/new-pet-dialog/new-pet-dialog.component';
+import { UtilsService } from '../../shared/utils.service';
 
 @Component({
     selector: 'app-overview',
@@ -16,11 +17,13 @@ export class OverviewComponent implements OnInit {
     user: string;
     myPets = [];
     pet: Pet;
+    todos = [];
 
     constructor(
         private router: Router,
         private firebaseCrudService: FirebaseCrudService,
-        private dialog: MatDialog
+        private dialog: MatDialog,
+        private utilsService: UtilsService
     ) {}
 
     ngOnInit(): void {
@@ -44,6 +47,7 @@ export class OverviewComponent implements OnInit {
             .then((result) => {
                 result.docs.forEach((doc) => {
                     this.myPets.push({ id: doc.id, ...doc.data() });
+                    this.listToDosForPet(doc.id);
                 });
             });
     }
@@ -91,5 +95,22 @@ export class OverviewComponent implements OnInit {
 
     editPet(pet: Pet): void {
         this.router.navigate(['overview/view-pet', pet]);
+    }
+
+    listToDosForPet(petId: string): void {
+        const toDo = [];
+        this.firebaseCrudService
+            .listConditionsForPetAndToDo(petId)
+            .then((result) => {
+                for (let i = 0; i < Math.min(result.length, 3); i++) {
+                    const doc = result[i];
+                    toDo.push({ id: doc.id, ...doc });
+                }
+            });
+        this.todos[petId] = toDo;
+    }
+
+    transformDate(date: Date): string {
+        return this.utilsService.formatDate(date);
     }
 }
