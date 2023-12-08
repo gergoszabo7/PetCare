@@ -1,5 +1,5 @@
 [
-    { "value": "Keverék", "viewValue": "Keverék" },
+    { "value": "Keverék", "viewValue": "Keverék", "mw": 15, "fw": 12},
     { "value": "Abruzzói juhászkutya", "viewValue": "Abruzzói juhászkutya" },
     { "value": "Affenpinscher", "viewValue": "Affenpinscher" },
     { "value": "Afgán agár", "viewValue": "Afgán agár" },
@@ -152,7 +152,7 @@
     { "value": "Dunker", "viewValue": "Dunker" },
     { "value": "Erdélyi kopó", "viewValue": "Erdélyi kopó" },
     { "value": "Eurázsiai", "viewValue": "Eurázsiai" },
-    { "value": "Entlebuchi havasi kutya", "viewValue": "Entlebuchi havasi kutya" },    
+    { "value": "Entlebuchi havasi kutya", "viewValue": "Entlebuchi havasi kutya" },
     { "value": "Eszkimó kutya", "viewValue": "Eszkimó kutya" },
     { "value": "Amerikai eszkimó kutya", "viewValue": "Amerikai eszkimó kutya" },
     { "value": "Kanadai eszkimó kutya", "viewValue": "Kanadai eszkimó kutya" },
@@ -532,5 +532,4 @@
     { "value": "West highland white terrier", "viewValue": "West highland white terrier" },
     { "value": "Whippet", "viewValue": "Whippet" }
 ]
-                                             
-  
+

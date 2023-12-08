@@ -1,3 +1,15 @@
+<ng-container *ngIf="userData && owners && owners.length > 0">
+    <mat-form-field
+        [formGroup]="selectUserPets"
+        class="w-100"
+        *ngIf="userData.data.isVet"
+    >
+        <mat-label>gazda kiválasztása</mat-label>
+        <mat-select formControlName="owner" *ngFor="let owner of owners">
+            <mat-option [value]="owner.uid">{{ owner.email }}</mat-option>
+        </mat-select>
+    </mat-form-field>
+</ng-container>
 <div class="my-4 mx-4">
     <div class="row">
         <div class="col-md-2">
@@ -238,11 +250,22 @@
             </div>
         </div>
         <ng-template #defaultTemplate>
-            <div class="col-md-8 my-3 ms-5">
-                <p class="text-center">
-                    Válassza ki a megjeleníteni kívánt háziállatot!
-                </p>
-            </div>
+            <ng-container *ngIf="userData">
+                <div class="col-md-8 my-3 ms-5">
+                    <p
+                        class="text-center"
+                        *ngIf="userData.data.isVet; else userTemplate"
+                    >
+                        Válasszon ki gazdát, majd a listából egy hozzá tartozó
+                        háziállatot!
+                    </p>
+                    <ng-template #userTemplate>
+                        <p class="text-center">
+                            Válasszon ki a listából egy háziállatot!
+                        </p>
+                    </ng-template>
+                </div>
+            </ng-container>
         </ng-template>
     </div>
 </div>

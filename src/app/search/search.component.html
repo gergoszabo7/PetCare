@@ -1,0 +1,34 @@
+<mat-tab-group>
+    <mat-tab label="Háziállat keresése">
+        <mat-form-field>
+            <mat-label>Háziállat keresése</mat-label>
+            <input
+                matInput
+                placeholder="háziállatnév, fajta..."
+                (change)="applyPetFilter($event)"
+            />
+        </mat-form-field>
+        <div *ngIf="filteredPets.length === 0" class="no-result-text my-3">
+            Nyomjon Entert az eredmények megtekintéséhez!
+        </div>
+        <div *ngFor="let pet of filteredPets">
+            {{ pet.name + " " + pet.breed }}
+        </div>
+    </mat-tab>
+    <mat-tab label="Állatorvos keresése">
+        <mat-form-field class="centered-full-width">
+            <mat-label>Állatorvos keresése</mat-label>
+            <input
+                matInput
+                placeholder="név, e-mail cím..."
+                (change)="applyVetFilter($event)"
+            />
+        </mat-form-field>
+        <div *ngIf="filteredVets.length === 0" class="no-result-text my-3">
+            Nyomjon Entert az eredmények megtekintéséhez!
+        </div>
+        <div *ngFor="let vet of filteredVets">
+            {{ vet.email }}
+        </div>
+    </mat-tab>
+</mat-tab-group>

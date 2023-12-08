@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Auth, getAuth } from 'firebase/auth';
-import { Observable, ReplaySubject, map, startWith } from 'rxjs';
+import { Observable, map, startWith } from 'rxjs';
 import { Breed } from 'src/app/models/breed.model';
 import { Pet } from 'src/app/models/pet.model';
 import { FirebaseCrudService } from 'src/app/shared/firebase-crud.service';
@@ -27,6 +27,7 @@ export class NewPetDialogComponent implements OnInit {
     userData: any;
     addPetForm: FormGroup;
     owners: { uid: string; email: string }[];
+    hideLoader = false;
 
     constructor(
         private firebaseCrudService: FirebaseCrudService,
@@ -47,13 +48,21 @@ export class NewPetDialogComponent implements OnInit {
                 this.breeds = data;
                 this.formLoaded = true;
                 this.breedsLoaded = true;
-                this.initializeForm();
-                this.setupSearch();
+
+                // Use then to wait for getUserDataObject to complete
+                this.getUserDataObject(this.auth.currentUser.uid)
+                    .then(() => {
+                        // Initialize the form after getUserDataObject completes
+                        this.initializeForm();
+                        this.setupSearch();
+                        this.hideLoader = true;
+                    })
+                    .catch((error) => {
+                        console.error('Error during initialization:', error);
+                    });
             },
             (error) => console.error('Kutyafajták nem lekérdezhetők:', error)
         );
-        this.getUserDataObject(this.auth.currentUser.uid);
-        this.setAllOwners(this.auth.currentUser.uid);
     }
 
     private initializeForm(): void {
@@ -65,8 +74,13 @@ export class NewPetDialogComponent implements OnInit {
             breed: [null, Validators.required],
             sex: [null, Validators.required],
             color: ['', Validators.required],
-            owner: ['', Validators.required],
         });
+        if (this.userData.data.isVet) {
+            this.addPetForm.addControl(
+                'owner',
+                this.fb.control('', Validators.required)
+            );
+        }
     }
 
     private setupSearch(): void {

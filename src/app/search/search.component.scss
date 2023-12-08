@@ -1,0 +1,16 @@
+mat-form-field {
+    width: 100% !important;
+    input {
+        text-align: center;
+        font-size: 1.1rem;
+        font-weight: 600;
+    }
+}
+
+.no-result-text {
+    text-align: center;
+    opacity: 0.3;
+    font-weight: 600;
+    font-size: 1rem;
+    font-style: italic;
+}

@@ -6,6 +6,7 @@ import { FirebaseCrudService } from '../../shared/firebase-crud.service';
 import { MatDialog } from '@angular/material/dialog';
 import { NewPetDialogComponent } from '../../dialogs/new-pet-dialog/new-pet-dialog.component';
 import { UtilsService } from '../../shared/utils.service';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
     selector: 'app-overview',
@@ -18,12 +19,16 @@ export class OverviewComponent implements OnInit {
     myPets = [];
     pet: Pet;
     todos = [];
+    userData: any;
+    selectUserPets: FormGroup;
+    owners: { uid: string; email: string }[];
 
     constructor(
         private router: Router,
         private firebaseCrudService: FirebaseCrudService,
         private dialog: MatDialog,
-        private utilsService: UtilsService
+        private utilsService: UtilsService,
+        private fb: FormBuilder
     ) {}
 
     ngOnInit(): void {
@@ -31,7 +36,12 @@ export class OverviewComponent implements OnInit {
             this.auth = getAuth();
             this.user = this.auth.currentUser.email;
         }
+        this.setAllOwners(this.auth.currentUser.uid);
+        this.initializeForm();
         this.listPets();
+        this.selectUserPets.valueChanges.subscribe(() => {
+            this.listPets();
+        });
     }
 
     addPet() {
@@ -41,15 +51,38 @@ export class OverviewComponent implements OnInit {
         });
     }
 
-    listPets() {
-        this.firebaseCrudService
-            .listPetsForUser(this.auth.currentUser.uid)
-            .then((result) => {
-                result.docs.forEach((doc) => {
-                    this.myPets.push({ id: doc.id, ...doc.data() });
-                    this.listToDosForPet(doc.id);
-                });
+    initializeForm(): void {
+        this.selectUserPets = this.fb.group({
+            owner: [''],
+        });
+    }
+
+    async listPets() {
+        let uidForPets: string;
+        const userSnapshot = await this.firebaseCrudService.getUserData(
+            this.auth.currentUser.uid
+        );
+
+        if (userSnapshot.exists()) {
+            const uData = userSnapshot.data();
+            this.userData = {
+                id: userSnapshot.id,
+                data: uData,
+            };
+        }
+
+        if (this.userData.data.isVet) {
+            uidForPets = this.selectUserPets.get('owner')?.value;
+        } else {
+            uidForPets = this.auth.currentUser.uid;
+        }
+
+        this.firebaseCrudService.listPetsForUser(uidForPets).then((result) => {
+            result.docs.forEach((doc) => {
+                this.myPets.push({ id: doc.id, ...doc.data() });
+                this.listToDosForPet(doc.id);
             });
+        });
     }
 
     getPetAge(birth: string): { age: number; time: string } {
@@ -106,8 +139,25 @@ export class OverviewComponent implements OnInit {
                     const doc = result[i];
                     toDo.push({ id: doc.id, ...doc });
                 }
+                this.todos[petId] = toDo;
             });
-        this.todos[petId] = toDo;
+    }
+
+    setAllOwners(uid: string): void {
+        this.owners = [];
+
+        this.firebaseCrudService
+            .getAllUsers(false, uid)
+            .then((querySnapshot) => {
+                querySnapshot.forEach((userDoc) => {
+                    const userData = userDoc.data();
+                    const owner: { uid: string; email: string } = {
+                        uid: userDoc.id,
+                        email: userData['email'],
+                    };
+                    this.owners.push(owner);
+                });
+            });
     }
 
     transformDate(date: Date): string {

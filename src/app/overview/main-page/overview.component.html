@@ -1,10 +1,28 @@
-<ng-container *ngIf="myPets.length === 0; else petsTemplate">
+<ng-container *ngIf="userData && owners && owners.length > 0">
+    <mat-form-field
+        [formGroup]="selectUserPets"
+        class="w-100"
+        *ngIf="userData.data.isVet"
+    >
+        <mat-label>gazda kiválasztása</mat-label>
+        <mat-select formControlName="owner" *ngFor="let owner of owners">
+            <mat-option [value]="owner.uid">{{ owner.email }}</mat-option>
+        </mat-select>
+    </mat-form-field>
+</ng-container>
+<ng-container *ngIf="myPets.length === 0 && userData; else petsTemplate">
     <div
         class="my-4 add-pet-message text-center d-flex justify-content-center align-items-center"
     >
-        <p class="text-center">
-            Hozzon létre új háziállatot a "Háziállat hozzáadása" gombbal!
+        <p class="text-center" *ngIf="userData.data.isVet; else userTemplate">
+            Válasszon ki gazdát, vagy hozzon létre új háziállatot a "Háziállat
+            hozzáadása" gombbal!
         </p>
+        <ng-template #userTemplate>
+            <p class="text-center">
+                Hozzon létre új háziállatot a "Háziállat hozzáadása" gombbal!
+            </p>
+        </ng-template>
     </div>
 </ng-container>
 <ng-template #petsTemplate>
@@ -82,7 +100,7 @@
                                 <li *ngIf="todo.condType === 'gyógyszer'">
                                     {{
                                         todo.medicineName +
-                                            " bevétele hamarosan: " +
+                                            " bevétele ekkor: " +
                                             transformDate(todo.dueDate)
                                     }}
                                 </li>
@@ -91,7 +109,7 @@
                                         "Közelgő vizsgálat: " +
                                             todo.examinationName +
                                             ", ekkor: " +
-                                            todo.examinationDate
+                                            transformDate(todo.dueDate)
                                     }}
                                 </li>
                                 <li *ngIf="todo.condType === 'protokoll'">

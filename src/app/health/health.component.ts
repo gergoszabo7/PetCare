@@ -2,10 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { Auth, getAuth } from 'firebase/auth';
 import { FirebaseCrudService } from '../shared/firebase-crud.service';
 import { Pet } from '../models/pet.model';
-import { NewPetDialogComponent } from '../dialogs/new-pet-dialog/new-pet-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { NewConditionDialogComponent } from '../dialogs/new-condition-dialog/new-condition-dialog.component';
 import { ConfirmDialogComponent } from '../dialogs/confirm-dialog/confirm-dialog.component';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
     selector: 'app-health',
@@ -24,11 +24,14 @@ export class HealthComponent implements OnInit {
     medicines = [];
     examinations = [];
     protocols = [];
-    todayDate = new Date();
+    userData: any;
+    selectUserPets: FormGroup;
+    owners: { uid: string; email: string }[];
 
     constructor(
         private firebaseCrudService: FirebaseCrudService,
-        private dialog: MatDialog
+        private dialog: MatDialog,
+        private fb: FormBuilder,
     ) {}
 
     ngOnInit(): void {
@@ -36,7 +39,12 @@ export class HealthComponent implements OnInit {
             this.auth = getAuth();
             this.user = this.auth.currentUser.email;
         }
+        this.setAllOwners(this.auth.currentUser.uid);
+        this.initializeForm();
         this.listPets();
+        this.selectUserPets.valueChanges.subscribe(() => {
+            this.listPets();
+        });
     }
 
     addCondition() {
@@ -50,14 +58,37 @@ export class HealthComponent implements OnInit {
         });
     }
 
-    listPets() {
-        this.firebaseCrudService
-            .listPetsForUser(this.auth.currentUser.uid)
-            .then((result) => {
-                result.docs.forEach((doc) => {
-                    this.myPets.push({ id: doc.id, ...doc.data() });
-                });
+    initializeForm(): void {
+        this.selectUserPets = this.fb.group({
+            owner: [''],
+        });
+    }
+
+    async listPets() {
+        let uidForPets: string;
+        const userSnapshot = await this.firebaseCrudService.getUserData(
+            this.auth.currentUser.uid
+        );
+
+        if (userSnapshot.exists()) {
+            const uData = userSnapshot.data();
+            this.userData = {
+                id: userSnapshot.id,
+                data: uData,
+            };
+        }
+
+        if (this.userData.data.isVet) {
+            uidForPets = this.selectUserPets.get('owner')?.value;
+        } else {
+            uidForPets = this.auth.currentUser.uid;
+        }
+
+        this.firebaseCrudService.listPetsForUser(uidForPets).then((result) => {
+            result.docs.forEach((doc) => {
+                this.myPets.push({ id: doc.id, ...doc.data() });
             });
+        });
     }
 
     showData(petId: string): void {
@@ -115,7 +146,12 @@ export class HealthComponent implements OnInit {
             case 'naponta':
                 nextDoseDate = new Date(
                     startDate.getTime() +
-                    Math.ceil((daysSinceStart + 1) / freq) * freq * 24 * 60 * 60 * 1000
+                        Math.ceil((daysSinceStart + 1) / freq) *
+                            freq *
+                            24 *
+                            60 *
+                            60 *
+                            1000
                 );
                 break;
             case 'hetente':
@@ -145,7 +181,8 @@ export class HealthComponent implements OnInit {
                         break;
                     case 'hetente':
                         nextDoseDate = new Date(
-                            nextDoseDate.getTime() + 7 * freq * 24 * 60 * 60 * 1000
+                            nextDoseDate.getTime() +
+                                7 * freq * 24 * 60 * 60 * 1000
                         );
                         break;
                     case 'havonta':
@@ -189,6 +226,23 @@ export class HealthComponent implements OnInit {
         } else {
             return '';
         }
+    }
+
+    setAllOwners(uid: string): void {
+        this.owners = [];
+
+        this.firebaseCrudService
+            .getAllUsers(false, uid)
+            .then((querySnapshot) => {
+                querySnapshot.forEach((userDoc) => {
+                    const userData = userDoc.data();
+                    const owner: { uid: string; email: string } = {
+                        uid: userDoc.id,
+                        email: userData['email'],
+                    };
+                    this.owners.push(owner);
+                });
+            });
     }
 
     deleteCondition(condId: string): void {

@@ -35,10 +35,15 @@ import { ViewPetComponent } from './overview/view-pet/view-pet.component';
 import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
 import { HealthComponent } from './health/health.component';
 import { NewConditionDialogComponent } from './dialogs/new-condition-dialog/new-condition-dialog.component';
-import {MatListModule} from "@angular/material/list";
-import {MatChipsModule} from "@angular/material/chips";
-import {MatExpansionModule} from "@angular/material/expansion";
-import {MatCheckboxModule} from "@angular/material/checkbox";
+import { MatListModule } from '@angular/material/list';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { SearchComponent } from './search/search.component';
+import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
+import {MatTableModule} from "@angular/material/table";
+import { FilterPipe } from './shared/filter.pipe';
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 
 registerLocaleData(localeHu);
 @NgModule({
@@ -53,6 +58,8 @@ registerLocaleData(localeHu);
         ConfirmDialogComponent,
         HealthComponent,
         NewConditionDialogComponent,
+        SearchComponent,
+        FilterPipe,
     ],
     imports: [
         BrowserModule,
@@ -82,6 +89,9 @@ registerLocaleData(localeHu);
         MatChipsModule,
         MatExpansionModule,
         MatCheckboxModule,
+        MatTableModule,
+        MatPaginatorModule,
+        MatProgressSpinnerModule,
     ],
     exports: [RouterModule],
     providers: [

@@ -1,19 +1,18 @@
 import { Injectable } from '@angular/core';
 import {
-    collection,
-    getFirestore,
     addDoc,
+    collection,
+    deleteDoc,
     getDocs,
-    where,
+    getFirestore,
     query,
     updateDoc,
-    deleteDoc,
+    where,
 } from 'firebase/firestore';
 import { Pet } from '../models/pet.model';
 import { SnackbarService } from './snackbar.service';
 import { Router } from '@angular/router';
 import { doc, getDoc } from '@angular/fire/firestore';
-import {user} from "@angular/fire/auth";
 
 @Injectable({
     providedIn: 'root',
@@ -29,6 +28,12 @@ export class FirebaseCrudService {
     listPetsForUser(uid: string) {
         const petsRef = collection(this.db, 'pets');
         const q = query(petsRef, where('userId', '==', uid));
+        return getDocs(q);
+    }
+
+    listAllPets() {
+        const petsRef = collection(this.db, 'pets');
+        const q = query(petsRef);
         return getDocs(q);
     }
 
@@ -110,17 +115,25 @@ export class FirebaseCrudService {
 
                     dueDate = this.getNextDose(startDate, freq, freqUnit);
                 } else if (condType === 'vizsgálat') {
-                    dueDate = doc.data()['dueDate'];
+                    dueDate = new Date(doc.data()['dueDate']);
                 }
 
                 const docWithDueDate = { id: doc.id, ...doc.data(), dueDate };
                 conditionsWithDueDate.push(docWithDueDate);
             });
 
-            conditionsWithDueDate.sort((a, b) => a.dueDate - b.dueDate);
+            conditionsWithDueDate.sort((a, b) =>
+                a.dueDate < b.dueDate ? -1 : 1
+            );
+            return conditionsWithDueDate.filter((item) => {
+                const dueDate = new Date(item.dueDate);
+                const daysDifference = Math.floor(
+                    (dueDate.getTime() - new Date().getTime()) /
+                        (24 * 60 * 60 * 1000)
+                );
 
-            console.log(conditionsWithDueDate);
-            return conditionsWithDueDate;
+                return daysDifference <= 90;
+            });
         });
     }
 
@@ -166,13 +179,16 @@ export class FirebaseCrudService {
         return getDoc(userRef);
     }
 
-    getAllUsers(vet: boolean, vetId: string) {
+    getAllUsers(vet: boolean, vetId?: string) {
         const userRef = collection(this.db, 'users');
-        const q = query(
-            userRef,
-            where('isVet', '==', vet),
-            where('vetId', '==', vetId)
-        );
+        let q = query(userRef, where('isVet', '==', vet));
+        if (vetId) {
+            q = query(
+                userRef,
+                where('isVet', '==', vet),
+                where('vetId', '==', vetId)
+            );
+        }
         return getDocs(q);
     }
 }

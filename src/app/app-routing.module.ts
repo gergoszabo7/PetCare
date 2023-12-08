@@ -5,7 +5,8 @@ import { OverviewComponent } from './overview/main-page/overview.component';
 import { AuthGuard } from './auth.guard';
 import { LoginGuard } from './login.guard';
 import { ViewPetComponent } from './overview/view-pet/view-pet.component';
-import {HealthComponent} from "./health/health.component";
+import { HealthComponent } from './health/health.component';
+import {SearchComponent} from "./search/search.component";
 
 const routes: Routes = [
     { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -30,6 +31,7 @@ const routes: Routes = [
         ],
     },
     { path: 'health', component: HealthComponent, canActivate: [AuthGuard] },
+    { path: 'search', component: SearchComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({
