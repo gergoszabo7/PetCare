@@ -47,11 +47,13 @@ export class LoginComponent {
     }
 
     register() {
-        if (this.reg_email === '') {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const passwordRegex = /^(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z])/;
+        if (this.reg_email === '' || !emailRegex.test(this.reg_email)) {
             this.snackBarService.openSnackBar(
-                'Kérem írjon be e-mail címet!',
+                'Érvényes e-mail címet adjon meg!',
                 undefined,
-                { duration: 3000, panelClass: ['red-snackbar'] }
+                { duration: 3000, panelClass: ['yellow-snackbar'] }
             );
             return;
         }
@@ -59,7 +61,23 @@ export class LoginComponent {
             this.snackBarService.openSnackBar(
                 'Kérem írjon be jelszót!',
                 undefined,
-                { duration: 3000, panelClass: ['red-snackbar'] }
+                { duration: 3000, panelClass: ['yellow-snackbar'] }
+            );
+            return;
+        }
+        if (this.reg_password.length < 8) {
+            this.snackBarService.openSnackBar(
+                'A jelszónak legalább 8 karakter hosszúnak kell lennie!',
+                undefined,
+                { duration: 3000, panelClass: ['yellow-snackbar'] }
+            );
+            return;
+        }
+        if (!passwordRegex.test(this.reg_password)) {
+            this.snackBarService.openSnackBar(
+                'A jelszónak tartalmaznia kell legalább egy számot, egy nagybetűs és egy kisbetűs karaktert!',
+                undefined,
+                { duration: 5000, panelClass: ['yellow-snackbar'] }
             );
             return;
         }
@@ -67,16 +85,11 @@ export class LoginComponent {
             this.snackBarService.openSnackBar(
                 'A jelszavaknak meg kell egyezniük',
                 undefined,
-                { duration: 3000, panelClass: ['red-snackbar'] }
+                { duration: 3000, panelClass: ['yellow-snackbar'] }
             );
             return;
         }
 
         this.auth.register(this.reg_email, this.reg_password, this.is_vet);
-        this.email = '';
-        this.password = '';
-        this.reg_email = '';
-        this.reg_password = '';
-        this.reg_password_again = '';
     }
 }

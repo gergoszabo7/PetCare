@@ -22,7 +22,7 @@
                     >
                 </li>
                 <li class="nav-item mx-2">
-                    <a class="nav-link" href="#">Oltáskönyv</a>
+                    <a class="nav-link" routerLink="book">Oltási könyv</a>
                 </li>
                 <li class="nav-item mx-2">
                     <a class="nav-link" routerLink="health">Egészség</a>
@@ -32,9 +32,15 @@
                 </li>
             </ul>
         </div>
-        <div class="nav-item mx-3">
+        <div class="nav-item mx-3 row">
             <a
-                class="nav-link log-out"
+                class="nav-link log-out col mx-4"
+                routerLink="profile"
+            >
+                <mat-icon>account_circle</mat-icon>
+            </a>
+            <a
+                class="nav-link log-out col"
                 routerLink="overview/main-page"
                 (click)="logout()"
             >

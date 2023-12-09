@@ -3,6 +3,7 @@ import {
     addDoc,
     collection,
     deleteDoc,
+    DocumentData,
     getDocs,
     getFirestore,
     query,
@@ -13,6 +14,7 @@ import { Pet } from '../models/pet.model';
 import { SnackbarService } from './snackbar.service';
 import { Router } from '@angular/router';
 import { doc, getDoc } from '@angular/fire/firestore';
+import { Query } from '@firebase/firestore-types';
 
 @Injectable({
     providedIn: 'root',
@@ -34,7 +36,25 @@ export class FirebaseCrudService {
     listAllPets() {
         const petsRef = collection(this.db, 'pets');
         const q = query(petsRef);
-        return getDocs(q);
+        return getDocs(q).then((querySnapshot) => {
+            return querySnapshot.docs.map((doc) => {
+                return { petId: doc.id, ...doc.data() };
+            });
+        });
+    }
+
+    async getPet(petId: string): Promise<any> {
+        const petDocRef = doc(this.db, 'pets', petId);
+        const snapshot = await getDoc(petDocRef);
+
+        if (snapshot.exists()) {
+            const petData = snapshot.data();
+            return {
+                ...petData,
+            };
+        } else {
+            return null;
+        }
     }
 
     createPet(pet: Pet) {
@@ -59,9 +79,16 @@ export class FirebaseCrudService {
         });
     }
 
-    updatePet(petId: string, data: { name: string; weight: number }) {
+    updatePet(
+        petId: string,
+        data: { name: string; weight: number; isPublic: boolean }
+    ) {
         const petDoc = doc(this.db, 'pets', petId);
-        updateDoc(petDoc, { name: data.name, weight: data.weight }).then(() => {
+        updateDoc(petDoc, {
+            name: data.name,
+            weight: data.weight,
+            isPublic: data.isPublic,
+        }).then(() => {
             this.snackbarService.openSnackBar(
                 'Háziállat sikeresen módosítva!',
                 undefined,
@@ -188,6 +215,27 @@ export class FirebaseCrudService {
                 where('isVet', '==', vet),
                 where('vetId', '==', vetId)
             );
+        }
+        return getDocs(q);
+    }
+
+    createRequest(request: any) {
+        const requestRef = collection(this.db, 'requests');
+        addDoc(requestRef, request).then(() => {
+            this.snackbarService.openSnackBar('Kérelem elküldve!', undefined, {
+                duration: 3000,
+                panelClass: ['green-snackbar'],
+            });
+        });
+    }
+
+    getRequests(vetId?: string, ownerId?: string) {
+        const reqRef = collection(this.db, 'requests');
+        let q = null;
+        if (ownerId) {
+            q = query(reqRef, where('ownerId', '==', ownerId));
+        } else {
+            q = query(reqRef, where('vetId', '==', vetId));
         }
         return getDocs(q);
     }

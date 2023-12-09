@@ -44,6 +44,11 @@ import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
 import {MatTableModule} from "@angular/material/table";
 import { FilterPipe } from './shared/filter.pipe';
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import { BookComponent } from './book/book.component';
+import {MatSlideToggleModule} from "@angular/material/slide-toggle";
+import { PetProfileComponent } from './pet-profile/pet-profile.component';
+import { NewRequestDialogComponent } from './dialogs/new-request-dialog/new-request-dialog.component';
+import { ProfileComponent } from './profile/profile.component';
 
 registerLocaleData(localeHu);
 @NgModule({
@@ -60,6 +65,10 @@ registerLocaleData(localeHu);
         NewConditionDialogComponent,
         SearchComponent,
         FilterPipe,
+        BookComponent,
+        PetProfileComponent,
+        NewRequestDialogComponent,
+        ProfileComponent,
     ],
     imports: [
         BrowserModule,
@@ -92,6 +101,7 @@ registerLocaleData(localeHu);
         MatTableModule,
         MatPaginatorModule,
         MatProgressSpinnerModule,
+        MatSlideToggleModule,
     ],
     exports: [RouterModule],
     providers: [

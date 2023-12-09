@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Pet } from '../../models/pet.model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Auth } from 'firebase/auth';
-import { AuthService } from '../../shared/auth.service';
+import { Auth, getAuth } from 'firebase/auth';
 import { FirebaseCrudService } from '../../shared/firebase-crud.service';
-import { HttpClient } from '@angular/common/http';
 import { ConfirmDialogComponent } from '../../dialogs/confirm-dialog/confirm-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 
@@ -18,12 +16,11 @@ export class ViewPetComponent implements OnInit {
     auth: Auth;
     updatePetForm: FormGroup;
     pet: Pet;
-    petId;
+    petId: string;
     constructor(
+        private router: Router,
         private route: ActivatedRoute,
-        private authService: AuthService,
         private firebaseCrudService: FirebaseCrudService,
-        private http: HttpClient,
         private fb: FormBuilder,
         private dialog: MatDialog
     ) {}
@@ -38,6 +35,7 @@ export class ViewPetComponent implements OnInit {
                 sex: params['sex'],
                 color: params['color'],
                 userId: params['userId'],
+                isPublic: params['isPublic'],
             };
             this.petId = params['id'];
             this.initializeForm();
@@ -48,6 +46,7 @@ export class ViewPetComponent implements OnInit {
         this.firebaseCrudService.updatePet(this.petId, {
             name: this.updatePetForm.get('name')?.value,
             weight: this.updatePetForm.get('weight')?.value,
+            isPublic: this.updatePetForm.get('isPublic')?.value,
         });
     }
 
@@ -67,13 +66,14 @@ export class ViewPetComponent implements OnInit {
     }
 
     viewPublicProfile(): void {
-        console.log();
+        this.router.navigate(['/pet-profile', this.petId]);
     }
 
     private initializeForm(): void {
         this.updatePetForm = this.fb.group({
             name: [this.pet.name, Validators.required],
             weight: [this.pet.weight ?? ''],
+            isPublic: [this.pet.isPublic],
         });
     }
 }

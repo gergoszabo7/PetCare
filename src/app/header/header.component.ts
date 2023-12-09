@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../shared/auth.service';
-import { Auth, getAuth } from 'firebase/auth';
+import { FirebaseCrudService } from '../shared/firebase-crud.service';
 
 @Component({
     selector: 'app-header',
@@ -9,6 +9,7 @@ import { Auth, getAuth } from 'firebase/auth';
 })
 export class HeaderComponent {
     constructor(private authService: AuthService) {}
+
     logout() {
         this.authService.logout();
     }

@@ -7,4 +7,5 @@ export interface Pet {
     sex: string;
     color: string;
     userId: string;
+    isPublic: boolean;
 }

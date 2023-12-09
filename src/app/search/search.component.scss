@@ -1,3 +1,5 @@
+@use '/src/styles/palette.scss' as colors;
+
 mat-form-field {
     width: 100% !important;
     input {
@@ -13,4 +15,17 @@ mat-form-field {
     font-weight: 600;
     font-size: 1rem;
     font-style: italic;
+}
+
+p {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.pet-container:hover {
+    background-color: rgba(colors.$petcare-accent, 0.1);
+}
+
+.view-button:hover {
+    cursor: pointer;
 }

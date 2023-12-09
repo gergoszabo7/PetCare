@@ -122,6 +122,7 @@ export class NewPetDialogComponent implements OnInit {
             userId: this.userData.data.isVet
                 ? this.addPetForm.get('owner')?.value
                 : this.auth.currentUser.uid,
+            isPublic: false,
         };
         this.firebaseCrudService.createPet(this.pet);
         this.closeDialog();
