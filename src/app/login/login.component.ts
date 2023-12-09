@@ -75,7 +75,7 @@ export class LoginComponent {
         }
         if (!passwordRegex.test(this.reg_password)) {
             this.snackBarService.openSnackBar(
-                'A jelszónak tartalmaznia kell legalább egy számot, egy nagybetűs és egy kisbetűs karaktert!',
+                'A jelszónak tartalmaznia kell legalább egy számot, legalább egy nagybetűs és egy kisbetűs karaktert!',
                 undefined,
                 { duration: 5000, panelClass: ['yellow-snackbar'] }
             );

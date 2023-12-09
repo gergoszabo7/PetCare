@@ -1,1 +1,132 @@
-<p>profile works!</p>
+<div *ngIf="loaded; else loader">
+    <h3 class="text-center m-5 opacity-75">Profil</h3>
+    <div class="row my-4 mx-5">
+        <div class="col">
+            <mat-form-field [formGroup]="profileForm" class="email">
+                <mat-label>E-mail</mat-label>
+                <input matInput class="w-100" formControlName="email" />
+                <mat-error
+                    *ngIf="profileForm.get('email').hasError('invalidEmail')"
+                >
+                    Helytelen e-mail cím formátum!
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <div class="col">
+            <mat-form-field [formGroup]="profileForm">
+                <mat-label>Név</mat-label>
+                <input matInput formControlName="name" />
+                <mat-error
+                    *ngIf="profileForm.get('name').hasError('invalidName')"
+                >
+                    Helytelen név
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <div class="col">
+            <mat-form-field [formGroup]="profileForm">
+                <mat-label>Mobil</mat-label>
+                <span class="mx-2 opacity-50 fw-bolder fs-6" matPrefix
+                    >+36</span
+                >
+                <input
+                    type="sumbit"
+                    matInput
+                    class="mobile-input fw-bolder fs-6 pb-3"
+                    formControlName="mobile"
+                />
+                <mat-error
+                    *ngIf="
+                        profileForm.get('mobile').hasError('invalidPhoneNumber')
+                    "
+                >
+                    Helytelen formátum
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <div class="col my-2">
+            <button mat-raised-button color="accent" (click)="updateUser()">
+                Profiladatok módosítása
+            </button>
+        </div>
+    </div>
+    <mat-divider></mat-divider>
+    <h3 class="text-center m-5 opacity-75">Jelszó módosítása</h3>
+    <div class="row my-4 mx-5">
+        <div class="col">
+            <mat-form-field [formGroup]="updatePasswordForm">
+                <mat-label>Régi jelszó</mat-label>
+                <input type="password" matInput formControlName="oldPassword" />
+            </mat-form-field>
+        </div>
+        <div class="col">
+            <mat-form-field [formGroup]="updatePasswordForm">
+                <mat-label>Új jelszó</mat-label>
+                <input type="password" matInput formControlName="newPassword" />
+                <mat-error
+                    *ngIf="
+                        updatePasswordForm
+                            .get('newPassword')
+                            .hasError('minlength')
+                    "
+                >
+                    A jelszónak legalább 8 karakter hosszúnak kell lennie!
+                </mat-error>
+                <mat-error
+                    *ngIf="
+                        updatePasswordForm
+                            .get('newPassword')
+                            .hasError('invalidPassword')
+                    "
+                >
+                    A jelszónak tartalmaznia kell legalább egy számot, legalább
+                    egy nagybetűs és egy kisbetűs karaktert!
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <div class="col">
+            <mat-form-field [formGroup]="updatePasswordForm">
+                <mat-label>Új jelszó mégegyszer</mat-label>
+                <input
+                    type="password"
+                    matInput
+                    formControlName="newPasswordAgain"
+                />
+                <mat-error
+                    *ngIf="
+                        updatePasswordForm
+                            .get('newPasswordAgain')
+                            .hasError('passwordMismatch')
+                    "
+                >
+                    Az új jelszavaknak egyezniük kell!
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <div class="col my-2">
+            <button
+                mat-raised-button
+                color="accent"
+                type="submit"
+                (click)="updatePassword()"
+            >
+                Jelszó módosítása
+            </button>
+        </div>
+    </div>
+    <mat-divider></mat-divider>
+    <h3 class="text-center m-5 opacity-75">Kérelmek</h3>
+    <ng-container>
+        <div *ngIf="!userData.isVet; else vetRequests">
+            <div class="row my-4 mx-5"></div>
+        </div>
+        <ng-template #vetRequests>
+            <div class="row my-4 mx-5"></div>
+        </ng-template>
+    </ng-container>
+</div>
+<ng-template #loader>
+    <div class="align-items-center justify-content-center d-flex m-5">
+        <mat-spinner></mat-spinner>
+    </div>
+</ng-template>

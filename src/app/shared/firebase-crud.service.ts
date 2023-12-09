@@ -3,7 +3,6 @@ import {
     addDoc,
     collection,
     deleteDoc,
-    DocumentData,
     getDocs,
     getFirestore,
     query,
@@ -14,7 +13,6 @@ import { Pet } from '../models/pet.model';
 import { SnackbarService } from './snackbar.service';
 import { Router } from '@angular/router';
 import { doc, getDoc } from '@angular/fire/firestore';
-import { Query } from '@firebase/firestore-types';
 
 @Injectable({
     providedIn: 'root',
@@ -238,5 +236,30 @@ export class FirebaseCrudService {
             q = query(reqRef, where('vetId', '==', vetId));
         }
         return getDocs(q);
+    }
+
+    updateUser(
+        uid: string,
+        data: { email: string; name: string; mobile: string }
+    ) {
+        const userDoc = doc(this.db, 'users', uid);
+        updateDoc(userDoc, {
+            email: data.email,
+            name: data.name,
+            mobile: data.mobile,
+        })
+            .then(() => {
+                this.snackbarService.openSnackBar(
+                    'Felhasználói adatok sikeresen módosítva!',
+                    undefined,
+                    { duration: 3000, panelClass: ['green-snackbar'] }
+                );
+            })
+            .catch(() => {
+                this.snackbarService.openSnackBar('Hibás adatok!', undefined, {
+                    duration: 3000,
+                    panelClass: ['red-snackbar'],
+                });
+            });
     }
 }

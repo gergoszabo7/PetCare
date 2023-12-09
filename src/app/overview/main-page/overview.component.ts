@@ -34,7 +34,6 @@ export class OverviewComponent implements OnInit {
     ngOnInit(): void {
         if (getAuth()) {
             this.auth = getAuth();
-            this.user = this.auth.currentUser.email;
         }
         this.setAllOwners(this.auth.currentUser.uid);
         this.initializeForm();
