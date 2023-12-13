@@ -21,7 +21,9 @@ export class OverviewComponent implements OnInit {
     todos = [];
     userData: any;
     selectUserPets: FormGroup;
-    owners: { uid: string; email: string }[];
+    owners: { uid: string; display: string }[];
+    selectedOwner: string;
+    showButton = false;
 
     constructor(
         private router: Router,
@@ -39,14 +41,16 @@ export class OverviewComponent implements OnInit {
         this.initializeForm();
         this.listPets();
         this.selectUserPets.valueChanges.subscribe(() => {
+            this.myPets = [];
             this.listPets();
         });
     }
 
-    addPet() {
+    addPet(ownerId?: string) {
         this.dialog.open(NewPetDialogComponent, {
             height: '780px',
             width: '400px',
+            data: ownerId,
         });
     }
 
@@ -57,6 +61,7 @@ export class OverviewComponent implements OnInit {
     }
 
     async listPets() {
+        this.showButton = false;
         let uidForPets: string;
         const userSnapshot = await this.firebaseCrudService.getUserData(
             this.auth.currentUser.uid
@@ -72,14 +77,15 @@ export class OverviewComponent implements OnInit {
 
         if (this.userData.data.isVet) {
             uidForPets = this.selectUserPets.get('owner')?.value;
+            this.selectedOwner = this.selectUserPets.get('owner')?.value;
         } else {
             uidForPets = this.auth.currentUser.uid;
         }
-
         this.firebaseCrudService.listPetsForUser(uidForPets).then((result) => {
             result.docs.forEach((doc) => {
                 this.myPets.push({ id: doc.id, ...doc.data() });
                 this.listToDosForPet(doc.id);
+                this.showButton = true;
             });
         });
     }
@@ -150,9 +156,11 @@ export class OverviewComponent implements OnInit {
             .then((querySnapshot) => {
                 querySnapshot.forEach((userDoc) => {
                     const userData = userDoc.data();
-                    const owner: { uid: string; email: string } = {
+                    const owner: { uid: string; display: string } = {
                         uid: userDoc.id,
-                        email: userData['email'],
+                        display: userData['name']
+                            ? userData['name']
+                            : userData['email'],
                     };
                     this.owners.push(owner);
                 });

@@ -26,12 +26,12 @@ export class HealthComponent implements OnInit {
     protocols = [];
     userData: any;
     selectUserPets: FormGroup;
-    owners: { uid: string; email: string }[];
+    owners: { uid: string; display: string }[];
 
     constructor(
         private firebaseCrudService: FirebaseCrudService,
         private dialog: MatDialog,
-        private fb: FormBuilder,
+        private fb: FormBuilder
     ) {}
 
     ngOnInit(): void {
@@ -43,6 +43,7 @@ export class HealthComponent implements OnInit {
         this.initializeForm();
         this.listPets();
         this.selectUserPets.valueChanges.subscribe(() => {
+            this.myPets = [];
             this.listPets();
         });
     }
@@ -236,9 +237,11 @@ export class HealthComponent implements OnInit {
             .then((querySnapshot) => {
                 querySnapshot.forEach((userDoc) => {
                     const userData = userDoc.data();
-                    const owner: { uid: string; email: string } = {
+                    const owner: { uid: string; display: string } = {
                         uid: userDoc.id,
-                        email: userData['email'],
+                        display: userData['name']
+                            ? userData['name']
+                            : userData['email'],
                     };
                     this.owners.push(owner);
                 });

@@ -211,7 +211,7 @@ export class FirebaseCrudService {
             q = query(
                 userRef,
                 where('isVet', '==', vet),
-                where('vetId', '==', vetId)
+                where('vet', '==', vetId)
             );
         }
         return getDocs(q);
@@ -261,5 +261,25 @@ export class FirebaseCrudService {
                     panelClass: ['red-snackbar'],
                 });
             });
+    }
+
+    deleteRequest(reqId: string, callback?: () => void) {
+        const reqDoc = doc(this.db, 'requests', reqId);
+        deleteDoc(reqDoc).then(() => {
+            callback();
+        });
+    }
+
+    updateUserAfterRequest(uid: string, vetId: string) {
+        const userDoc = doc(this.db, 'users', uid);
+        return updateDoc(userDoc, {
+            vet: vetId,
+        });
+    }
+
+    listVaccinesForPet(petId: string) {
+        const vacRef = collection(this.db, 'vaccinations');
+        const q = query(vacRef, where('petId', '==', petId));
+        return getDocs(q);
     }
 }

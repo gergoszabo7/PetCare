@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Auth, getAuth } from 'firebase/auth';
 import { Observable, map, startWith } from 'rxjs';
 import { Breed } from 'src/app/models/breed.model';
@@ -35,7 +35,8 @@ export class NewPetDialogComponent implements OnInit {
         private http: HttpClient,
         private fb: FormBuilder,
         private utilsService: UtilsService,
-        private snackbarService: SnackbarService
+        private snackbarService: SnackbarService,
+        @Inject(MAT_DIALOG_DATA) public data: string
     ) {}
 
     ngOnInit(): void {
@@ -48,11 +49,8 @@ export class NewPetDialogComponent implements OnInit {
                 this.breeds = data;
                 this.formLoaded = true;
                 this.breedsLoaded = true;
-
-                // Use then to wait for getUserDataObject to complete
                 this.getUserDataObject(this.auth.currentUser.uid)
                     .then(() => {
-                        // Initialize the form after getUserDataObject completes
                         this.initializeForm();
                         this.setupSearch();
                         this.hideLoader = true;
@@ -75,12 +73,6 @@ export class NewPetDialogComponent implements OnInit {
             sex: [null, Validators.required],
             color: ['', Validators.required],
         });
-        if (this.userData.data.isVet) {
-            this.addPetForm.addControl(
-                'owner',
-                this.fb.control('', Validators.required)
-            );
-        }
     }
 
     private setupSearch(): void {
@@ -100,6 +92,7 @@ export class NewPetDialogComponent implements OnInit {
     }
 
     addPet() {
+        console.log(this.data);
         if (this.addPetForm.invalid) {
             this.snackbarService.openSnackBar(
                 'Kötelező mezőket ki kell tölteni!',
@@ -120,7 +113,7 @@ export class NewPetDialogComponent implements OnInit {
             sex: this.addPetForm.get('sex')?.value,
             color: this.addPetForm.get('color')?.value,
             userId: this.userData.data.isVet
-                ? this.addPetForm.get('owner')?.value
+                ? this.data
                 : this.auth.currentUser.uid,
             isPublic: false,
         };

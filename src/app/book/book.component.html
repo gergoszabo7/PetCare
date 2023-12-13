@@ -1,1 +1,63 @@
-<p>book works!</p>
+<ng-container *ngIf="userData && owners && owners.length > 0">
+    <mat-form-field
+        [formGroup]="selectUserPets"
+        class="w-100"
+        *ngIf="userData.data.isVet"
+    >
+        <mat-label>gazda kiválasztása</mat-label>
+        <mat-select formControlName="owner">
+            <mat-option *ngFor="let owner of owners" [value]="owner.uid">{{
+                owner.display
+            }}</mat-option>
+        </mat-select>
+    </mat-form-field>
+</ng-container>
+<div class="my-4 mx-4">
+    <div class="row">
+        <div class="col-md-2">
+            <mat-card
+                *ngFor="let pet of myPets; let i = index"
+                [class.selected]="pet.id === selectedPetId"
+                (click)="showData(pet.id)"
+            >
+                <mat-card-content>{{ pet.name }}</mat-card-content>
+            </mat-card>
+        </div>
+        <div class="col mx-3" *ngIf="selectedPetId && vaccinations.length > 0; else noVaccinations">
+            <div
+                class="row fs-6 fw-bolder fst-italic opacity-75 vac-content text-center"
+            >
+                <div class="col-md-2 box">Dátum</div>
+                <div class="col-md-7 box-2">
+                    Vakcina típusa/ Gyártási szám/ Parazita ellenes készítmény
+                    neve / Adagja
+                </div>
+                <div class="col-md-3 box">Állatorvos</div>
+            </div>
+            <div
+                class="row vac-content text-center mt-5"
+                *ngFor="let vac of vaccinations"
+            >
+                <div class="col-md-2">{{ vac.date }}</div>
+                <div class="col-md-7">{{ vac.name }}</div>
+                <div class="col-md-3">
+                    {{ vac.vetName + " (" + vac.vetId + ")" }}
+                </div>
+            </div>
+            <mat-divider></mat-divider>
+        </div>
+    </div>
+</div>
+<ng-template #noVaccinations>
+    <div
+        class="row my-4 mx-5 fst-italic opacity-25 fw-bold justify-content-center align-items-center d-flex"
+    >
+        Válasszon ki egy háziállatot a listából, majd kattintson az "Oltás hozzáadása" gombra!
+    </div>
+</ng-template>
+<div class="add-button-container" *ngIf="selectedPetId">
+    <button mat-fab extended color="primary" aria-label="Állapot hozzáadása">
+        <mat-icon>add</mat-icon>
+        Oltás hozzáadása
+    </button>
+</div>

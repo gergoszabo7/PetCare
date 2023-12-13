@@ -13,6 +13,20 @@ import {
     updatePassword,
 } from '@angular/fire/auth';
 import { SnackbarService } from '../shared/snackbar.service';
+import { doc } from '@angular/fire/firestore';
+import firebase from 'firebase/compat';
+import QueryDocumentSnapshot = firebase.firestore.QueryDocumentSnapshot;
+import { QuerySnapshot } from '@angular/fire/compat/firestore';
+
+interface DisplayedRequest {
+    reqId: string;
+    ownerId: string;
+    vetId: string;
+    message?: string;
+    fromName?: string;
+    fromEmail: string;
+    fromMobile?: string;
+}
 @Component({
     selector: 'app-profile',
     templateUrl: './profile.component.html',
@@ -25,6 +39,8 @@ export class ProfileComponent implements OnInit {
     profileForm: FormGroup;
     updatePasswordForm: FormGroup;
     loaded = false;
+    requestLoaded = false;
+    requests: DisplayedRequest[] = [];
 
     constructor(
         private firebaseCrudService: FirebaseCrudService,
@@ -37,6 +53,7 @@ export class ProfileComponent implements OnInit {
             .then((user) => {
                 this.userData = user.data();
                 this.initializeForms();
+                this.listRequests();
                 this.loaded = true;
             });
     }
@@ -58,6 +75,55 @@ export class ProfileComponent implements OnInit {
             ],
             newPasswordAgain: ['', [this.passwordMatchValidator()]],
         });
+    }
+
+    listRequests() {
+        let vetId: string;
+        let ownerId: string;
+        if (this.userData.isVet) {
+            vetId = this.loggedInUser.uid;
+        } else {
+            ownerId = this.loggedInUser.uid;
+        }
+        this.firebaseCrudService
+            .getRequests(vetId, ownerId)
+            .then((querySnapshot) => {
+                const documentSnapshots: QueryDocumentSnapshot<unknown>[] =
+                    querySnapshot.docs as unknown as QueryDocumentSnapshot<unknown>[];
+
+                documentSnapshots.forEach((doc, index) => {
+                    this.requests[index] = {
+                        reqId: doc.id,
+                        ownerId: doc.data()['ownerId'],
+                        vetId: doc.data()['vetId'],
+                        message: doc.data()['message'],
+                        fromEmail: '',
+                    };
+                    const idToGet = this.userData.isVet
+                        ? doc.data()['ownerId']
+                        : doc.data()['vetId'];
+
+                    this.firebaseCrudService
+                        .getUserData(idToGet)
+                        .then((userData) => {
+                            this.requests[index].fromEmail =
+                                userData.data()['email'];
+                            this.requests[index].fromName =
+                                userData.data()['name'];
+                            this.requests[index].fromMobile =
+                                userData.data()['mobile'];
+                        });
+                });
+
+                this.requestLoaded = true;
+            })
+            .catch(() => {
+                this.snackbarService.openSnackBar(
+                    'Az adatok nem elérhetők',
+                    undefined,
+                    { duration: 3000, panelClass: ['red-snackbar'] }
+                );
+            });
     }
 
     emailValidator(): ValidatorFn {
@@ -202,5 +268,48 @@ export class ProfileComponent implements OnInit {
             name: this.profileForm.get('name')?.value,
             mobile: this.profileForm.get('mobile')?.value,
         });
+    }
+
+    deleteRequest(reqId: string) {
+        this.requestLoaded = false;
+        this.firebaseCrudService.deleteRequest(reqId, () => {
+            this.requests = [];
+            this.listRequests();
+            this.snackbarService.openSnackBar('Kérelem törölve!', undefined, {
+                duration: 4000,
+                panelClass: ['green-snackbar'],
+            });
+        });
+    }
+
+    approveRequest(reqId: string, ownerId: string) {
+        this.requestLoaded = false;
+        this.firebaseCrudService
+            .updateUserAfterRequest(ownerId, this.loggedInUser.uid)
+            .then(() => {
+                this.firebaseCrudService.deleteRequest(reqId, () => {
+                    this.requests = [];
+                    this.listRequests();
+                    this.snackbarService.openSnackBar(
+                        'Kérelem elfogadva!',
+                        undefined,
+                        {
+                            duration: 4000,
+                            panelClass: ['green-snackbar'],
+                        }
+                    );
+                });
+            })
+            .catch((error) => {
+                this.snackbarService.openSnackBar(
+                    'Hiba történt, próbálkozzon újra!',
+                    undefined,
+                    {
+                        duration: 3000,
+                        panelClass: ['red-snackbar'],
+                    }
+                );
+                this.requestLoaded = true;
+            });
     }
 }

@@ -1,5 +1,7 @@
 <ng-template #loader
-    ><div class="my-5 container d-flex justify-content-center align-items-center">
+    ><div
+        class="my-5 container d-flex justify-content-center align-items-center"
+    >
         <mat-spinner></mat-spinner></div
 ></ng-template>
 <div class="container" *ngIf="hideLoader; else loader">
@@ -89,23 +91,6 @@
                         <mat-option [value]="'vörös'">vörös</mat-option>
                     </mat-select>
                 </mat-form-field>
-                <ng-container *ngIf="userData && owners && owners.length > 0">
-                    <mat-form-field
-                        [formGroup]="addPetForm"
-                        class="w-100"
-                        *ngIf="userData.data.isVet"
-                    >
-                        <mat-label>gazda</mat-label>
-                        <mat-select
-                            formControlName="owner"
-                            *ngFor="let owner of owners"
-                        >
-                            <mat-option [value]="owner.uid">{{
-                                owner.email
-                            }}</mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </ng-container>
                 <div class="mt-4 w-100 d-flex justify-content-between">
                     <button
                         class="mx-2"

@@ -32,7 +32,7 @@
                 <input
                     type="sumbit"
                     matInput
-                    class="mobile-input fw-bolder fs-6 pb-3"
+                    class="mobile-input fs-6 pb-3"
                     formControlName="mobile"
                 />
                 <mat-error
@@ -116,12 +116,64 @@
     </div>
     <mat-divider></mat-divider>
     <h3 class="text-center m-5 opacity-75">Kérelmek</h3>
-    <ng-container>
-        <div *ngIf="!userData.isVet; else vetRequests">
-            <div class="row my-4 mx-5"></div>
-        </div>
-        <ng-template #vetRequests>
-            <div class="row my-4 mx-5"></div>
+    <ng-container *ngIf="requestLoaded; else loader">
+        <ng-container *ngIf="requests.length > 0; else noRequests">
+            <div>
+                <div class="row my-2 mx-5 fst-italic fw-bold fs-6 opacity-50">
+                    <div class="col-md-2">E-mail</div>
+                    <div class="col">Név</div>
+                    <div class="col">Mobil</div>
+                    <div class="col-md-4">Üzenet</div>
+                    <div class="col">Státusz</div>
+                    <div class="col" *ngIf="userData.isVet"></div>
+                    <div class="col"></div>
+                </div>
+                <div class="row my-2 mx-5" *ngFor="let req of requests">
+                    <div class="col-md-2">{{ req.fromEmail }}</div>
+                    <div class="col">{{ req.fromName ?? "nincs megadva" }}</div>
+                    <div class="col">
+                        {{ req.fromMobile ?? "nincs megadva" }}
+                    </div>
+                    <div class="col-md-4">
+                        {{
+                            req.message !== ""
+                                ? req.message
+                                : "nincs megjegyzés"
+                        }}
+                    </div>
+                    <div class="col">Visszaigazolásra vár</div>
+                    <div class="col fs-6 pb-3" *ngIf="userData.isVet">
+                        <button
+                            mat-button
+                            color="primary"
+                            (click)="approveRequest(req.reqId, req.ownerId)"
+                        >
+                            <mat-icon>task_alt</mat-icon>
+                            Elfogadás
+                        </button>
+                    </div>
+                    <div class="col fs-6 pb-3">
+                        <button
+                            mat-button
+                            color="warn"
+                            (click)="deleteRequest(req.reqId)"
+                        >
+                            <mat-icon>{{
+                                userData.isVet ? "cancel" : "undo"
+                            }}</mat-icon>
+                            {{ userData.isVet ? "Elutasítás" : "Visszavonás" }}
+                        </button>
+                    </div>
+                    <mat-divider></mat-divider>
+                </div>
+            </div>
+        </ng-container>
+        <ng-template #noRequests>
+            <div
+                class="row my-4 mx-5 fst-italic opacity-25 fw-bold justify-content-center align-items-center d-flex"
+            >
+                Nincsenek függőben lévő kérelmek
+            </div>
         </ng-template>
     </ng-container>
 </div>

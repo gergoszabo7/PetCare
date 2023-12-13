@@ -5,8 +5,10 @@
         *ngIf="userData.data.isVet"
     >
         <mat-label>gazda kiválasztása</mat-label>
-        <mat-select formControlName="owner" *ngFor="let owner of owners">
-            <mat-option [value]="owner.uid">{{ owner.email }}</mat-option>
+        <mat-select formControlName="owner">
+            <mat-option *ngFor="let owner of owners" [value]="owner.uid">{{
+                owner.display
+            }}</mat-option>
         </mat-select>
     </mat-form-field>
 </ng-container>
@@ -128,15 +130,19 @@
         </mat-card>
     </div>
 </ng-template>
-<div class="add-button-container">
-    <button
-        mat-fab
-        extended
-        color="accent"
-        (click)="addPet()"
-        aria-label="Háziállat hozzáadása"
-    >
-        <mat-icon>add</mat-icon>
-        Háziállat hozzáadása
-    </button>
-</div>
+<ng-container *ngIf="showButton">
+    <div class="add-button-container" *ngIf="selectedOwner; else userTemplate">
+        <button mat-fab extended color="accent" (click)="addPet(selectedOwner)">
+            <mat-icon>add</mat-icon>
+            Háziállat hozzáadása
+        </button>
+    </div>
+    <ng-template #userTemplate>
+        <div class="add-button-container">
+            <button mat-fab extended color="accent" (click)="addPet()">
+                <mat-icon>add</mat-icon>
+                Háziállat hozzáadása
+            </button>
+        </div>
+    </ng-template>
+</ng-container>

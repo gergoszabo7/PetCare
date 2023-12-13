@@ -5,8 +5,10 @@
         *ngIf="userData.data.isVet"
     >
         <mat-label>gazda kiválasztása</mat-label>
-        <mat-select formControlName="owner" *ngFor="let owner of owners">
-            <mat-option [value]="owner.uid">{{ owner.email }}</mat-option>
+        <mat-select formControlName="owner">
+            <mat-option *ngFor="let owner of owners" [value]="owner.uid">{{
+                owner.display
+            }}</mat-option>
         </mat-select>
     </mat-form-field>
 </ng-container>

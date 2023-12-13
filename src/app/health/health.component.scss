@@ -25,7 +25,7 @@ p {
 
 mat-card {
     font-size: 1.25rem;
-    background-color: rgba(144,202,249,0.6)
+    background-color: rgba($color: colors.$petcare-accent, $alpha: 0.6);
 }
 
 mat-card.selected {

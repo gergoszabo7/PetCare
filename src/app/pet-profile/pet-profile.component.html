@@ -42,7 +42,7 @@
             </div>
             <div class="col">
                 <label>Mobil</label>
-                <p>{{ "+36" + user.mobile ?? "Nincs megadva" }}</p>
+                <p>{{ user.mobile ? "+36" + user.mobile : "Nincs megadva" }}</p>
             </div>
         </div>
     </ng-container>
