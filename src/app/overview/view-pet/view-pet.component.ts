@@ -6,7 +6,7 @@ import { Auth, getAuth } from 'firebase/auth';
 import { FirebaseCrudService } from '../../shared/firebase-crud.service';
 import { ConfirmDialogComponent } from '../../dialogs/confirm-dialog/confirm-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
-import {SnackbarService} from "../../shared/snackbar.service";
+import { SnackbarService } from '../../shared/snackbar.service';
 
 @Component({
     selector: 'app-view-pet',

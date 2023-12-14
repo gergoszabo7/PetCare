@@ -7,7 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { NewPetDialogComponent } from '../../dialogs/new-pet-dialog/new-pet-dialog.component';
 import { UtilsService } from '../../shared/utils.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import {SnackbarService} from "../../shared/snackbar.service";
+import { SnackbarService } from '../../shared/snackbar.service';
 
 @Component({
     selector: 'app-overview',
