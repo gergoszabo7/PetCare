@@ -1,0 +1,78 @@
+<mat-tab-group>
+    <mat-tab label="Háziállat keresése">
+        <mat-form-field>
+            <mat-label>Háziállat keresése</mat-label>
+            <input
+                matInput
+                placeholder="háziállatnév, fajta..."
+                (change)="applyPetFilter($event)"
+            />
+        </mat-form-field>
+        <div *ngIf="filteredPets.length === 0" class="no-result-text my-3">
+            Nyomjon Entert az eredmények megtekintéséhez!
+        </div>
+        <div class="m-4">
+            <div
+                *ngFor="let pet of filteredPets"
+                class="row justify-content-between align-items-center pt-3 mx-3 pet-container"
+            >
+                <div class="col">
+                    <p>{{ pet.name }}</p>
+                </div>
+                <div class="col">
+                    <p>{{ pet.breed }}</p>
+                </div>
+                <div
+                    *ngIf="pet.isPublic; else emptyAction"
+                    class="col-auto view-button"
+                    (click)="viewPublicProfile(pet.petId)"
+                >
+                    <mat-icon color="accent">visibility</mat-icon>
+                </div>
+                <ng-template #emptyAction
+                    ><div class="opacity-25 col-auto view-button">
+                        <mat-icon color="accent">visibility</mat-icon>
+                    </div></ng-template
+                >
+                <mat-divider></mat-divider>
+            </div>
+        </div>
+    </mat-tab>
+    <mat-tab label="Állatorvos keresése" *ngIf="loggedIn">
+        <mat-form-field class="centered-full-width">
+            <mat-label>Állatorvos keresése</mat-label>
+            <input
+                matInput
+                placeholder="név, e-mail cím..."
+                (change)="applyVetFilter($event)"
+            />
+        </mat-form-field>
+        <div *ngIf="filteredVets.length === 0" class="no-result-text my-3">
+            Nyomjon Entert az eredmények megtekintéséhez!
+        </div>
+        <div class="m-4">
+            <div
+                *ngFor="let vet of filteredVets"
+                class="row justify-content-between align-items-center pt-3 mx-3 pet-container"
+            >
+                <div class="col">
+                    <p>{{ vet.email }}</p>
+                </div>
+                <div class="col">
+                    <p>{{ vet.name }}</p>
+                </div>
+                <div class="col">
+                    <p>{{ vet.mobile ? "+36" + vet.mobile : "" }}</p>
+                </div>
+                <div
+                    class="col-auto view-button"
+                    (click)="assignVet(vet)"
+                    *ngIf="!userData.isVet"
+                >
+                    <mat-icon>add</mat-icon>
+                </div>
+                <mat-divider></mat-divider>
+            </div>
+        </div>
+    </mat-tab>
+</mat-tab-group>

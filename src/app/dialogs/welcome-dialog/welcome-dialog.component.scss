@@ -1,0 +1,5 @@
+@use '/src/styles/palette.scss' as colors;
+
+.blue {
+    color: colors.$petcare-accent;
+}

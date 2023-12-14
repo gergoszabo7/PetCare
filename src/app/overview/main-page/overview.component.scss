@@ -1,0 +1,78 @@
+.add-button-container {
+    position: fixed;
+    bottom: 36px;
+    right: 36px;
+    z-index: 2;
+}
+
+.mat-mdc-unelevated-button {
+  --mat-mdc-button-persistent-ripple-color: rgba(0, 0, 0, 0);
+  background-color: transparent !important;
+}
+
+.mat-card-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  height: 80%;
+  width: 100%;
+  img {
+    width: 100%;
+    border-radius: 15px;
+    border: solid black 2px;
+  }
+  h4 {
+    font-size: 2rem;
+    font-weight: 600;
+  }
+  .row {
+    label {
+      font-size: 1rem;
+      font-weight: 700;
+      opacity: 0.8;
+    }
+    p {
+      font-size: 1.25rem;
+    }
+  }
+  mat-card {
+    background-color: rgba(74,173,82,0.8);
+      border-radius: 30px;
+    height: 100%;
+    width: 80%;
+  }
+  button {
+    opacity: 0.6;
+    height:24px !important;
+    width:24px !important;
+}
+  ::ng-deep .mat-icon{
+    height:24px !important;
+    width:24px !important;
+    font-size:1.5rem !important;
+}
+  .todo {
+    font-size: 1.2rem;
+  }
+}
+
+.mat-card {
+  width: 60%;
+  margin: 10px;
+  transition: box-shadow 0.3s;
+}
+
+.mat-card-container:hover {
+  mat-card:hover {
+    background-color: rgba(76, 168, 83, 0.8);
+    cursor: pointer;
+  }
+}
+
+.add-pet-message {
+    p {
+        font-size: 1.2rem;
+        opacity: 0.3;
+        font-weight: 600;
+    }
+}

@@ -1,0 +1,36 @@
+@use '/src/styles/palette.scss' as colors;
+
+mat-card {
+    font-size: 1.25rem;
+    background-color: rgba($color: colors.$petcare-primary, $alpha: 0.6);
+}
+
+mat-card.selected {
+    background-color: colors.$petcare-primary;
+    font-weight: 600;
+    opacity: 1;
+}
+
+mat-card:hover {
+    cursor: pointer;
+}
+
+.box {
+    background-color: rgba($color: colors.$petcare-accent, $alpha: 0.5);
+}
+
+.box-2 {
+    background-color: rgba($color: colors.$petcare-accent, $alpha: 0.25);
+}
+
+.vac-content {
+    height: 60px;
+}
+
+.add-button-container {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    z-index: 2;
+    padding: 10px;
+}

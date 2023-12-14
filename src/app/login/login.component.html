@@ -1,31 +1,77 @@
 <body>
-  <h4 class="text-center m-4">Bejelentkezés</h4>
-  <div class="form-container">
-    <mat-form-field>
-      <mat-label>e-mail</mat-label>
-      <input matInput required name="email" [(ngModel)]="email" />
-    </mat-form-field>
-    <mat-form-field>
-      <mat-label>jelszó</mat-label>
-      <input matInput required type="password" name="password" [(ngModel)]="password" />
-    </mat-form-field>
-    <button color="primary" mat-raised-button (click)="login()">Bejelentkezés</button>
-  </div>
-  <mat-divider class="m-5"></mat-divider>
-  <h4 class="text-center m-2">Regisztráció</h4>
-  <div class="form-container">
-    <mat-form-field>
-      <mat-label>e-mail</mat-label>
-      <input matInput required name="reg_email" [(ngModel)]="reg_email" />
-    </mat-form-field>
-    <mat-form-field>
-      <mat-label>jelszó</mat-label>
-      <input matInput required type="password" name="reg_password" [(ngModel)]="reg_password" />
-    </mat-form-field>
-    <mat-form-field>
-      <mat-label>jelszó mégegyszer</mat-label>
-      <input matInput required type="password" name="reg_password_again" [(ngModel)]="reg_password_again" />
-    </mat-form-field>
-    <button color="accent" mat-raised-button (click)="register()">Regisztráció</button>
-  </div>
+    <mat-tab-group
+        mat-stretch-tabs="false"
+        mat-align-tabs="center"
+        class="my-4"
+    >
+        <mat-tab label="Bejelentkezés" class="mx-4">
+            <mat-divider class="m-5"></mat-divider>
+            <div class="img-container my-5">
+                <img class="mx-2" src="../../assets/paw_icon.png" />
+            </div>
+            <h4 class="text-center m-4">Bejelentkezés</h4>
+            <div class="form-container">
+                <mat-form-field>
+                    <mat-label>e-mail</mat-label>
+                    <input matInput required name="email" [(ngModel)]="email" />
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>jelszó</mat-label>
+                    <input
+                        matInput
+                        required
+                        type="password"
+                        name="password"
+                        [(ngModel)]="password"
+                    />
+                </mat-form-field>
+                <button color="primary" mat-raised-button (click)="login()">
+                    Bejelentkezés
+                </button>
+            </div>
+        </mat-tab>
+        <mat-tab label="Regisztráció" class="mx-4">
+            <mat-divider class="m-5"></mat-divider>
+            <h4 class="text-center m-2">Regisztráció</h4>
+            <div class="form-container">
+                <mat-form-field>
+                    <mat-label>e-mail</mat-label>
+                    <input
+                        matInput
+                        required
+                        name="reg_email"
+                        [(ngModel)]="reg_email"
+                    />
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>jelszó</mat-label>
+                    <input
+                        matInput
+                        required
+                        type="password"
+                        name="reg_password"
+                        [(ngModel)]="reg_password"
+                    />
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>jelszó mégegyszer</mat-label>
+                    <input
+                        matInput
+                        required
+                        type="password"
+                        name="reg_password_again"
+                        [(ngModel)]="reg_password_again"
+                    />
+                </mat-form-field>
+                <section>
+                    <mat-checkbox [(ngModel)]="is_vet" class="example-margin"
+                        >állatorvosként regisztrálok</mat-checkbox
+                    >
+                </section>
+                <button color="accent" mat-raised-button (click)="register()">
+                    Regisztráció
+                </button>
+            </div>
+        </mat-tab>
+    </mat-tab-group>
 </body>

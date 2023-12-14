@@ -1,64 +1,95 @@
-import {Component, OnInit} from '@angular/core';
-import { FormBuilder, FormGroup, FormControl } from "@angular/forms";
+import { Component } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 import { AuthService } from '../shared/auth.service';
+import { SnackbarService } from '../shared/snackbar.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss'],
+    selector: 'app-login',
+    templateUrl: './login.component.html',
+    styleUrls: ['./login.component.scss'],
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent {
+    email = '';
+    password = '';
+    reg_email = '';
+    reg_password = '';
+    reg_password_again = '';
+    is_vet = false;
 
-  email = '';
-  password = '';
-  reg_email = '';
-  reg_password = '';
-  reg_password_again = '';
+    loginForm: FormGroup;
 
-  loginForm: FormGroup;
+    constructor(
+        private auth: AuthService,
+        private snackBarService: SnackbarService,
+        private titleService: Title
+    ) {}
 
-  constructor(private fb: FormBuilder, private auth: AuthService) {}
+    login() {
+        if (this.email === '') {
+            this.snackBarService.openSnackBar(
+                'Kérem írjon be e-mail címet!',
+                undefined,
+                { duration: 3000, panelClass: ['red-snackbar'] }
+            );
+            return;
+        }
+        if (this.password === '') {
+            this.snackBarService.openSnackBar(
+                'Kérem írjon be jelszót!',
+                undefined,
+                { duration: 3000, panelClass: ['red-snackbar'] }
+            );
+            return;
+        }
 
-  ngOnInit(): void {}
-
-  login(){
-    console.log(this.email);
-    if (this.email === ''){
-      alert('Please enter email!');
-      return;
-    }
-    if (this.password === ''){
-      alert('Please enter password!');
-      return;
-    }
-
-    this.auth.login(this.email,this.password);
-    this.email = '';
-    this.password = '';
-    this.reg_email = '';
-    this.reg_password = '';
-    this.reg_password_again = '';
-  }
-
-  register(){
-    if (this.reg_email === ''){
-      alert('Please enter email!');
-      return;
-    }
-    if (this.reg_password === ''){
-      alert('Please enter password!');
-      return;
-    }
-    if(this.reg_password !==  this.reg_password_again){
-      alert('Passwords do not match!');
-      return;
+        this.auth.login(this.email, this.password);
     }
 
-    this.auth.register(this.reg_email,this.reg_password);
-    this.email = '';
-    this.password = '';
-    this.reg_email = '';
-    this.reg_password = '';
-    this.reg_password_again = '';
-  }
+    register() {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const passwordRegex = /^(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z])/;
+        if (this.reg_email === '' || !emailRegex.test(this.reg_email)) {
+            this.snackBarService.openSnackBar(
+                'Érvényes e-mail címet adjon meg!',
+                undefined,
+                { duration: 3000, panelClass: ['yellow-snackbar'] }
+            );
+            return;
+        }
+        if (this.reg_password === '') {
+            this.snackBarService.openSnackBar(
+                'Kérem írjon be jelszót!',
+                undefined,
+                { duration: 3000, panelClass: ['yellow-snackbar'] }
+            );
+            return;
+        }
+        if (this.reg_password.length < 8) {
+            this.snackBarService.openSnackBar(
+                'A jelszónak legalább 8 karakter hosszúnak kell lennie!',
+                undefined,
+                { duration: 3000, panelClass: ['yellow-snackbar'] }
+            );
+            return;
+        }
+        if (!passwordRegex.test(this.reg_password)) {
+            this.snackBarService.openSnackBar(
+                'A jelszónak tartalmaznia kell legalább egy számot, legalább egy nagybetűs és egy kisbetűs karaktert!',
+                undefined,
+                { duration: 5000, panelClass: ['yellow-snackbar'] }
+            );
+            return;
+        }
+        if (this.reg_password !== this.reg_password_again) {
+            this.snackBarService.openSnackBar(
+                'A jelszavaknak meg kell egyezniük',
+                undefined,
+                { duration: 3000, panelClass: ['yellow-snackbar'] }
+            );
+            return;
+        }
+
+        this.auth.register(this.reg_email, this.reg_password, this.is_vet);
+    }
 }

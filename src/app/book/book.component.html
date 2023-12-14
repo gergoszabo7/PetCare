@@ -1,0 +1,104 @@
+<ng-container *ngIf="userData && owners && owners.length > 0">
+    <mat-form-field
+        [formGroup]="selectUserPets"
+        class="w-100"
+        *ngIf="userData.data.isVet"
+    >
+        <mat-label>gazda kiválasztása</mat-label>
+        <mat-select formControlName="owner">
+            <mat-option *ngFor="let owner of owners" [value]="owner.uid">{{
+                owner.display
+            }}</mat-option>
+        </mat-select>
+    </mat-form-field>
+</ng-container>
+<div class="my-4 mx-4">
+    <div class="row">
+        <div class="col-md-2">
+            <mat-card
+                *ngFor="let pet of myPets; let i = index"
+                [class.selected]="pet.id === selectedPetId"
+                (click)="showData(pet.id)"
+            >
+                <mat-card-content>{{ pet.name }}</mat-card-content>
+            </mat-card>
+        </div>
+        <div
+            class="col mx-3"
+            *ngIf="
+                selectedPetId && vaccinations.length > 0;
+                else noVaccinations
+            "
+        >
+            <div
+                class="row fs-6 fw-bolder fst-italic opacity-75 vac-content text-center"
+            >
+                <div class="col-md-1 box">Dátum</div>
+                <div class="col-md-7 box-2">
+                    Vakcina típusa/ Gyártási szám/ Parazita ellenes készítmény
+                    neve / Adagja
+                </div>
+                <div class="col-md-3 box">Állatorvos</div>
+                <div class="col-md-1 box-2" *ngIf="userData.data.isVet">
+                    Törlés
+                </div>
+            </div>
+            <div
+                class="row vac-content text-center mt-5"
+                *ngFor="let vac of vaccinations"
+            >
+                <div class="col-md-1">{{ vac.date }}</div>
+                <div class="col-md-7">{{ vac.name }}</div>
+                <div class="col-md-3">
+                    {{ vac.vetName ?? "" + " (" + vac.vetId + ")" }}
+                </div>
+                <div class="col-md-1" *ngIf="userData.data.isVet">
+                    <button
+                        mat-button
+                        color="warn"
+                        class="pe-1"
+                        (click)="deleteVaccine(vac.id)"
+                    >
+                        <mat-icon>close</mat-icon>
+                    </button>
+                </div>
+                <mat-divider class="mt-3"></mat-divider>
+            </div>
+        </div>
+    </div>
+</div>
+<ng-template #noVaccinations>
+    <ng-container *ngIf="userData">
+        <div
+            class="row my-4 mx-5 fst-italic opacity-25 fw-bold justify-content-center align-items-center d-flex"
+            *ngIf="userData.data.isVet && !selectedPetId"
+        >
+            Válasszon ki egy gazdát, majd háziállatot a listából és kattintson
+            az "Oltás hozzáadása" gombra!
+        </div>
+        <div
+            class="row my-4 mx-5 fst-italic opacity-25 fw-bold justify-content-center align-items-center d-flex"
+            *ngIf="!userData.data.isVet && !selectedPetId"
+        >
+            Válasszon ki egy háziállatot a listából az oltások megtekintéséhez!
+        </div>
+        <div
+            class="row my-4 mx-5 fst-italic opacity-25 fw-bold justify-content-center align-items-center d-flex"
+            *ngIf="selectedPetId"
+        >
+            Nincs oltás hozzáadva ehhez a háziállathoz!
+        </div>
+    </ng-container>
+</ng-template>
+<div class="add-button-container" *ngIf="selectedPetId && userData.data.isVet">
+    <button
+        mat-fab
+        extended
+        color="primary"
+        aria-label="Állapot hozzáadása"
+        (click)="openAddVaccination(selectedPetId)"
+    >
+        <mat-icon>add</mat-icon>
+        Oltás hozzáadása
+    </button>
+</div>

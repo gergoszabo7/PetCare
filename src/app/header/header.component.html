@@ -1,25 +1,48 @@
 <nav class="navbar navbar-expand-lg">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="#"><img  class="mx-2" src="../../assets/paw_icon.png"></a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
-        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav">
-          <li class="nav-item mx-2">
-            <a class="nav-link" href="#">Áttekintés</a>
-          </li>
-          <li class="nav-item mx-2">
-            <a class="nav-link" href="#">Oltáskönyv</a>
-          </li>
-          <li class="nav-item mx-2">
-            <a class="nav-link" href="#">Egészség</a>
-          </li>
-          <li class="nav-item mx-2">
-            <a class="nav-link" href="#">Keresés</a>
-          </li>
-        </ul>
-      </div>
+    <div class="container-fluid d-flex justify-content-between">
+        <a class="navbar-brand" href="#">
+            <img class="mx-2" src="../../assets/paw_icon.png" />
+        </a>
+        <button
+            class="navbar-toggler"
+            type="button"
+            data-toggle="collapse"
+            data-target="#navbarNav"
+            aria-controls="navbarNav"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+        >
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item mx-2">
+                    <a class="nav-link" routerLink="overview/main-page"
+                        >Áttekintés</a
+                    >
+                </li>
+                <li class="nav-item mx-2">
+                    <a class="nav-link" routerLink="book">Oltási könyv</a>
+                </li>
+                <li class="nav-item mx-2">
+                    <a class="nav-link" routerLink="health">Egészség</a>
+                </li>
+                <li class="nav-item mx-2">
+                    <a class="nav-link" routerLink="search">Keresés</a>
+                </li>
+            </ul>
+        </div>
+        <div class="nav-item mx-3 row">
+            <a class="nav-link col mx-4" routerLink="profile">
+                <mat-icon>account_circle</mat-icon>
+            </a>
+            <a
+                class="nav-link log-out col"
+                routerLink="overview/main-page"
+                (click)="logout()"
+            >
+                <mat-icon>logout</mat-icon>
+            </a>
+        </div>
     </div>
-  </nav>
+</nav>

@@ -1,20 +1,38 @@
 @use '/src/styles/palette.scss' as colors;
 
 .form-container {
-  margin: 48px auto;
+  margin: 2.5rem auto;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
 }
 
+mat-form-field {
+  margin: 1rem 0;
+  width: 360px;
+}
+
 h4 {
   opacity: 0.4;
-  font-size: 1.25rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.mat-mdc-raised-button {
+  margin-top: 2rem;
+  height: 50px;
+  width: 200px;
+}
+
+mat-tab-group {
+  font-size: 1rem;
   font-weight: 600;
 }
 
-
-.mat-raised-button {
-  background-color: colors.$petcare-primary;
+.img-container {
+  height: 75px;
+  display: flex;
+  justify-content: center;
+  opacity: 0.4;
 }

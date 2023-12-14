@@ -1,0 +1,54 @@
+<div
+    class="justify-content-center align-content-center d-flex my-5"
+    *ngIf="loading; else profile"
+>
+    <mat-spinner></mat-spinner>
+</div>
+<ng-template #profile>
+    <ng-container *ngIf="pet; else noPetFound">
+        <h3 class="text-center m-4">{{ pet.name }}</h3>
+        <div class="row m-3">
+            <div class="col">
+                <label>Faj</label>
+                <p>{{ pet.petType }}</p>
+            </div>
+            <div class="col">
+                <label>Fajta</label>
+                <p>{{ pet.breed }}</p>
+            </div>
+            <div class="col">
+                <label>Nem</label>
+                <p>{{ pet.sex }}</p>
+            </div>
+            <div class="col">
+                <label>Születési év</label>
+                <p>{{ pet.birth }}</p>
+            </div>
+            <div class="col">
+                <label>Szín</label>
+                <p>{{ pet.color }}</p>
+            </div>
+        </div>
+        <mat-divider></mat-divider>
+        <h4 class="mb-4 mt-5 text-center">Állattartó adatai</h4>
+        <div class="row m-3">
+            <div class="col">
+                <label>Név</label>
+                <p>{{ user.name ? user.name : "Nincs megadva" }}</p>
+            </div>
+            <div class="col">
+                <label>Email</label>
+                <p>{{ user.email }}</p>
+            </div>
+            <div class="col">
+                <label>Mobil</label>
+                <p>{{ user.mobile ? "+36" + user.mobile : "Nincs megadva" }}</p>
+            </div>
+        </div>
+    </ng-container>
+    <ng-template #noPetFound
+        ><h5 class="m-5 text-center fw-bolder fst-italic opacity-50">
+            Háziállat nem található vagy privát profillal rendelkezik.
+        </h5></ng-template
+    >
+</ng-template>

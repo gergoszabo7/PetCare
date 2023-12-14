@@ -1,0 +1,32 @@
+<h3 class="m-4 text-center">Állatorvosi kérelem</h3>
+<p class="text-center m-4">
+    Az űrlap elküldésével jelezheti állatorvosa felé a kérelmet, hogy magához
+    rendelhesse önt. A kérelem végelegesíte az állatorvos jóváhagyása után
+    történik.
+</p>
+<div class="m-4">
+    <mat-form-field [formGroup]="requestForm" class="w-100">
+        <mat-label>üzenet</mat-label>
+        <textarea
+            matInput
+            maxlength="120"
+            rows="3"
+            placeholder="üzenet az állatorvos számára... (opcionális)"
+            formControlName="message"
+        ></textarea>
+    </mat-form-field>
+</div>
+<div class="mt-4 d-flex justify-content-center">
+    <button
+        class="mx-5"
+        color="primary"
+        mat-raised-button
+        type="submit"
+        (click)="requestVet()"
+    >
+        Küldés
+    </button>
+    <button class="mx-5" mat-raised-button (click)="closeDialog()">
+        Mégsem
+    </button>
+</div>

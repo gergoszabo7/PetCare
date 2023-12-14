@@ -1,0 +1,20 @@
+<h1 mat-dialog-title class="text-center mat-dialog-title-custom m-2">
+    {{ data.title }}
+</h1>
+<div mat-dialog-content class="text-center mat-dialog-content-custom mt-4">
+    <p>{{ data.message }}</p>
+</div>
+<div mat-dialog-actions class="justify-content-center m-3">
+    <button
+        mat-button
+        color="accent"
+        (click)="onCancelClick()"
+        cdkFocusInitial
+        class="btn"
+    >
+        Mégsem
+    </button>
+    <button mat-button [mat-dialog-close]="true" color="warn" class="btn">
+        Törlés
+    </button>
+</div>

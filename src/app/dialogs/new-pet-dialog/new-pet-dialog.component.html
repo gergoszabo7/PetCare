@@ -1,0 +1,114 @@
+<ng-template #loader
+    ><div
+        class="my-5 container d-flex justify-content-center align-items-center"
+    >
+        <mat-spinner></mat-spinner></div
+></ng-template>
+<div class="container" *ngIf="hideLoader; else loader">
+    <h4 class="text-center my-5">Új háziállat</h4>
+    <div class="row justify-content-center align-items-center">
+        <div class="col-md-10">
+            <div class="form-container text-center" *ngIf="formLoaded">
+                <mat-form-field [formGroup]="addPetForm" class="w-100">
+                    <mat-label>név</mat-label>
+                    <input
+                        matInput
+                        required
+                        name="name"
+                        formControlName="name"
+                    />
+                </mat-form-field>
+                <mat-form-field [formGroup]="addPetForm" class="w-100">
+                    <mat-label>születési idő</mat-label>
+                    <input
+                        matInput
+                        [matDatepicker]="birthDatePicker"
+                        required
+                        formControlName="birth"
+                    />
+                    <mat-datepicker-toggle
+                        matSuffix
+                        [for]="birthDatePicker"
+                    ></mat-datepicker-toggle>
+                    <mat-datepicker #birthDatePicker></mat-datepicker>
+                </mat-form-field>
+                <mat-form-field [formGroup]="addPetForm" class="w-100">
+                    <mat-label>súly (kg)</mat-label>
+                    <input
+                        matInput
+                        type="number"
+                        min="1"
+                        max="300"
+                        formControlName="weight"
+                    />
+                </mat-form-field>
+                <mat-form-field [formGroup]="addPetForm" class="w-100">
+                    <mat-label>háziállat típusa</mat-label>
+                    <mat-select formControlName="petType">
+                        <mat-option [value]="'kutya'">kutya</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field [formGroup]="addPetForm" class="w-100">
+                    <mat-label>fajta</mat-label>
+                    <mat-select formControlName="breed" class="selectBreed">
+                        <mat-label>Fajta keresése</mat-label>
+                        <input
+                            matInput
+                            [matAutocomplete]="auto"
+                            [formControl]="searchControl"
+                        />
+                        <mat-autocomplete #auto="matAutocomplete">
+                            <mat-option
+                                *ngFor="let breed of filteredBreeds | async"
+                                [value]="breed.value"
+                                >{{ breed.viewValue }}</mat-option
+                            >
+                        </mat-autocomplete>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field [formGroup]="addPetForm" class="w-100">
+                    <mat-label>nem</mat-label>
+                    <mat-select formControlName="sex">
+                        <mat-option [value]="'szuka'">szuka</mat-option>
+                        <mat-option [value]="'kan'">kan</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field [formGroup]="addPetForm" class="w-100">
+                    <mat-label>szín</mat-label>
+                    <mat-select formControlName="color">
+                        <mat-option [value]="'arany'">arany</mat-option>
+                        <mat-option [value]="'bikolor'">bikolor</mat-option>
+                        <mat-option [value]="'barna'">barna</mat-option>
+                        <mat-option [value]="'fehér'">fehér</mat-option>
+                        <mat-option [value]="'fekete'">fekete</mat-option>
+                        <mat-option [value]="'harlekin'">harlekin</mat-option>
+                        <mat-option [value]="'szürke'">szürke</mat-option>
+                        <mat-option [value]="'sárga'">sárga</mat-option>
+                        <mat-option [value]="'vaj'">vaj</mat-option>
+                        <mat-option [value]="'zsemle'">zsemle</mat-option>
+                        <mat-option [value]="'trikolor'">trikolor</mat-option>
+                        <mat-option [value]="'vörös'">vörös</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <div class="mt-4 w-100 d-flex justify-content-between">
+                    <button
+                        class="mx-2"
+                        color="primary"
+                        mat-raised-button
+                        type="submit"
+                        (click)="addPet()"
+                    >
+                        Hozzáadás
+                    </button>
+                    <button
+                        class="mx-2"
+                        mat-raised-button
+                        (click)="closeDialog()"
+                    >
+                        Mégsem
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
