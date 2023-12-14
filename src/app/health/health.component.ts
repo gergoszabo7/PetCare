@@ -53,6 +53,7 @@ export class HealthComponent implements OnInit {
             height: '780px',
             width: '400px',
             data: this.selectedPetId,
+            disableClose: true,
         });
         newCondDialog.afterClosed().subscribe(() => {
             this.showData(this.selectedPetId);
@@ -254,6 +255,7 @@ export class HealthComponent implements OnInit {
                 title: 'Állapot törlése',
                 message: 'Biztosan töröli ezt az állapotot?',
             },
+            disableClose: true,
         });
 
         dialogRef.afterClosed().subscribe((result) => {

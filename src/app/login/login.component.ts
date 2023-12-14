@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { AuthService } from '../shared/auth.service';
 import { SnackbarService } from '../shared/snackbar.service';
-import { MatTabsModule } from '@angular/material/tabs';
+import { Title } from '@angular/platform-browser';
 
 @Component({
     selector: 'app-login',
@@ -20,9 +20,9 @@ export class LoginComponent {
     loginForm: FormGroup;
 
     constructor(
-        private fb: FormBuilder,
         private auth: AuthService,
-        private snackBarService: SnackbarService
+        private snackBarService: SnackbarService,
+        private titleService: Title
     ) {}
 
     login() {

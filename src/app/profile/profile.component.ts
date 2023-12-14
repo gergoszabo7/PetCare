@@ -13,10 +13,10 @@ import {
     updatePassword,
 } from '@angular/fire/auth';
 import { SnackbarService } from '../shared/snackbar.service';
-import { doc } from '@angular/fire/firestore';
 import firebase from 'firebase/compat';
 import QueryDocumentSnapshot = firebase.firestore.QueryDocumentSnapshot;
-import { QuerySnapshot } from '@angular/fire/compat/firestore';
+import { ConfirmDialogComponent } from '../dialogs/confirm-dialog/confirm-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 interface DisplayedRequest {
     reqId: string;
@@ -40,12 +40,15 @@ export class ProfileComponent implements OnInit {
     updatePasswordForm: FormGroup;
     loaded = false;
     requestLoaded = false;
+    relLoaded = false;
     requests: DisplayedRequest[] = [];
+    relatedUsers = [];
 
     constructor(
         private firebaseCrudService: FirebaseCrudService,
         private fb: FormBuilder,
-        private snackbarService: SnackbarService
+        private snackbarService: SnackbarService,
+        private dialog: MatDialog
     ) {}
     ngOnInit(): void {
         this.firebaseCrudService
@@ -53,6 +56,7 @@ export class ProfileComponent implements OnInit {
             .then((user) => {
                 this.userData = user.data();
                 this.initializeForms();
+                this.listRelations();
                 this.listRequests();
                 this.loaded = true;
             });
@@ -123,7 +127,49 @@ export class ProfileComponent implements OnInit {
                     undefined,
                     { duration: 3000, panelClass: ['red-snackbar'] }
                 );
+                this.requestLoaded = true;
             });
+    }
+
+    listRelations() {
+        if (this.userData.isVet) {
+            this.firebaseCrudService
+                .getRelatedUsers(this.loggedInUser.uid)
+                .then((querySnapshot) => {
+                    querySnapshot.forEach((doc) => {
+                        this.relatedUsers.push({ id: doc.id, ...doc.data() });
+                    });
+                    this.relLoaded = true;
+                })
+                .catch(() => {
+                    this.snackbarService.openSnackBar(
+                        'Az adatok nem elérhetők',
+                        undefined,
+                        { duration: 3000, panelClass: ['red-snackbar'] }
+                    );
+                    this.relLoaded = true;
+                });
+        } else {
+            if (!this.userData.vet) {
+                this.relatedUsers = [];
+                this.relLoaded = true;
+                return;
+            }
+            this.firebaseCrudService
+                .getUserData(this.userData.vet)
+                .then((vet) => {
+                    this.relatedUsers.push(vet.data());
+                    this.relLoaded = true;
+                })
+                .catch(() => {
+                    this.snackbarService.openSnackBar(
+                        'Az adatok nem elérhetők',
+                        undefined,
+                        { duration: 3000, panelClass: ['red-snackbar'] }
+                    );
+                    this.relLoaded = true;
+                });
+        }
     }
 
     emailValidator(): ValidatorFn {
@@ -228,7 +274,7 @@ export class ProfileComponent implements OnInit {
                             }
                         );
                     })
-                    .catch((error) => {
+                    .catch(() => {
                         this.snackbarService.openSnackBar(
                             'Hiba történt, próbálkozzon újra!',
                             undefined,
@@ -239,7 +285,7 @@ export class ProfileComponent implements OnInit {
                         );
                     });
             })
-            .catch((error) => {
+            .catch(() => {
                 this.snackbarService.openSnackBar(
                     'Régi jelszó nem megfelelő!',
                     undefined,
@@ -300,7 +346,7 @@ export class ProfileComponent implements OnInit {
                     );
                 });
             })
-            .catch((error) => {
+            .catch(() => {
                 this.snackbarService.openSnackBar(
                     'Hiba történt, próbálkozzon újra!',
                     undefined,
@@ -311,5 +357,49 @@ export class ProfileComponent implements OnInit {
                 );
                 this.requestLoaded = true;
             });
+    }
+
+    unassignUser(uid: string) {
+        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+            data: {
+                title: 'Leiratkozás',
+                message: 'Biztosan elvégzi a leiratkozást?',
+            },
+            disableClose: true,
+        });
+        dialogRef.afterClosed().subscribe((result) => {
+            if (result) {
+                let userToModify;
+                if (this.userData.isVet) {
+                    userToModify = uid;
+                } else {
+                    userToModify = this.loggedInUser.uid;
+                }
+                this.firebaseCrudService
+                    .updateUserAfterRequest(userToModify, '')
+                    .then(() => {
+                        this.snackbarService.openSnackBar(
+                            'Leiratkozás sikeres!',
+                            undefined,
+                            {
+                                duration: 3000,
+                                panelClass: ['green-snackbar'],
+                            }
+                        );
+                        this.relatedUsers = [];
+                        this.listRelations();
+                    })
+                    .catch(() => {
+                        this.snackbarService.openSnackBar(
+                            'Művelet sikertelen!',
+                            undefined,
+                            {
+                                duration: 3000,
+                                panelClass: ['red-snackbar'],
+                            }
+                        );
+                    });
+            }
+        });
     }
 }

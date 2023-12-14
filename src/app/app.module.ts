@@ -49,6 +49,8 @@ import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import { PetProfileComponent } from './pet-profile/pet-profile.component';
 import { NewRequestDialogComponent } from './dialogs/new-request-dialog/new-request-dialog.component';
 import { ProfileComponent } from './profile/profile.component';
+import { NewVaccinationDialogComponent } from './dialogs/new-vaccination-dialog/new-vaccination-dialog.component';
+import { WelcomeDialogComponent } from './dialogs/welcome-dialog/welcome-dialog.component';
 
 registerLocaleData(localeHu);
 @NgModule({
@@ -69,6 +71,8 @@ registerLocaleData(localeHu);
         PetProfileComponent,
         NewRequestDialogComponent,
         ProfileComponent,
+        NewVaccinationDialogComponent,
+        WelcomeDialogComponent,
     ],
     imports: [
         BrowserModule,

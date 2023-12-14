@@ -123,7 +123,7 @@ export class NewConditionDialogComponent implements OnInit {
     addCondition() {
         if (this.addConditionForm.invalid) {
             this.snackbarService.openSnackBar(
-                'Kötelező mezőket ki kell tölteni!',
+                'Kötelező mezőket helyesen ki kell tölteni!',
                 undefined,
                 { duration: 3000, panelClass: ['yellow-snackbar'] }
             );

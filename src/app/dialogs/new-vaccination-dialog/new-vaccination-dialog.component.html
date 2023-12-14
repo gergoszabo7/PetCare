@@ -1,0 +1,67 @@
+<div class="container">
+    <h4 class="text-center mt-4 mb-5">Új vakcina rögzítése</h4>
+    <div class="row justify-content-center align-items-center">
+        <div class="col-md-10">
+            <div class="form-container text-center">
+                <ng-container>
+                    <mat-form-field
+                        [formGroup]="addVaccinationForm"
+                        class="w-100"
+                    >
+                        <mat-label>dátum</mat-label>
+                        <input
+                            matInput
+                            [matDatepicker]="picker"
+                            formControlName="date"
+                        />
+                        <mat-datepicker-toggle
+                            matIconSuffix
+                            [for]="picker"
+                        ></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+                    <mat-form-field
+                        [formGroup]="addVaccinationForm"
+                        class="w-100"
+                    >
+                        <mat-label>megnevezés</mat-label>
+                        <textarea
+                            matInput
+                            maxlength="80"
+                            rows="3"
+                            placeholder="Vakcina típusa/ Gyártási szám/ Parazita ellenes készítmény neve / Adagja"
+                            formControlName="name"
+                        ></textarea>
+                        <mat-error
+                            *ngIf="
+                                addVaccinationForm
+                                    .get('name')
+                                    .hasError('minlength')
+                            "
+                        >
+                            Kérem adjon minél részletesebb leírást!
+                        </mat-error>
+                    </mat-form-field>
+                </ng-container>
+                <div class="mt-4 w-100 d-flex justify-content-between">
+                    <button
+                        class="mx-2"
+                        color="primary"
+                        mat-raised-button
+                        type="submit"
+                        (click)="addVaccination()"
+                    >
+                        Hozzáadás
+                    </button>
+                    <button
+                        class="mx-2"
+                        mat-raised-button
+                        (click)="closeDialog()"
+                    >
+                        Mégsem
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

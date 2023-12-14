@@ -92,10 +92,9 @@ export class NewPetDialogComponent implements OnInit {
     }
 
     addPet() {
-        console.log(this.data);
         if (this.addPetForm.invalid) {
             this.snackbarService.openSnackBar(
-                'Kötelező mezőket ki kell tölteni!',
+                'Kötelező mezőket helyesen ki kell tölteni!',
                 undefined,
                 { duration: 3000, panelClass: ['yellow-snackbar'] }
             );

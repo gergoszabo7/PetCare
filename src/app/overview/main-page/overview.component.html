@@ -130,7 +130,7 @@
         </mat-card>
     </div>
 </ng-template>
-<ng-container *ngIf="showButton">
+<ng-container>
     <div class="add-button-container" *ngIf="selectedOwner; else userTemplate">
         <button mat-fab extended color="accent" (click)="addPet(selectedOwner)">
             <mat-icon>add</mat-icon>

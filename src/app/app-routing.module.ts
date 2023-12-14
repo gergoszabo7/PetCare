@@ -7,9 +7,9 @@ import { LoginGuard } from './login.guard';
 import { ViewPetComponent } from './overview/view-pet/view-pet.component';
 import { HealthComponent } from './health/health.component';
 import { SearchComponent } from './search/search.component';
-import {PetProfileComponent} from "./pet-profile/pet-profile.component";
-import {BookComponent} from "./book/book.component";
-import {ProfileComponent} from "./profile/profile.component";
+import { PetProfileComponent } from './pet-profile/pet-profile.component';
+import { BookComponent } from './book/book.component';
+import { ProfileComponent } from './profile/profile.component';
 
 const routes: Routes = [
     { path: '', redirectTo: 'login', pathMatch: 'full' },

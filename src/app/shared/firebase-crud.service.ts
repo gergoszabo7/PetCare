@@ -13,6 +13,7 @@ import { Pet } from '../models/pet.model';
 import { SnackbarService } from './snackbar.service';
 import { Router } from '@angular/router';
 import { doc, getDoc } from '@angular/fire/firestore';
+import { user } from '@angular/fire/auth';
 
 @Injectable({
     providedIn: 'root',
@@ -57,24 +58,44 @@ export class FirebaseCrudService {
 
     createPet(pet: Pet) {
         const petsRef = collection(this.db, 'pets');
-        addDoc(petsRef, pet).then(() => {
-            this.snackbarService.openSnackBar(
-                'Háziállat sikeresen hozzáadva!',
-                undefined,
-                { duration: 3000, panelClass: ['green-snackbar'] }
-            );
-        });
+        addDoc(petsRef, pet)
+            .then(() => {
+                this.snackbarService.openSnackBar(
+                    'Háziállat sikeresen hozzáadva!',
+                    undefined,
+                    { duration: 3000, panelClass: ['green-snackbar'] }
+                );
+            })
+            .catch(() => {
+                this.snackbarService.openSnackBar(
+                    'Rendszerhiba, kérjük próbálkozzon később!',
+                    undefined,
+                    { duration: 3000, panelClass: ['red-snackbar'] }
+                );
+            });
     }
 
     deletePet(petId: string) {
         const petDoc = doc(this.db, 'pets', petId);
-        deleteDoc(petDoc).then(() => {
-            this.snackbarService.openSnackBar('Háziállat törölve!', undefined, {
-                duration: 3000,
-                panelClass: ['green-snackbar'],
+        deleteDoc(petDoc)
+            .then(() => {
+                this.snackbarService.openSnackBar(
+                    'Háziállat törölve!',
+                    undefined,
+                    {
+                        duration: 3000,
+                        panelClass: ['green-snackbar'],
+                    }
+                );
+                this.router.navigate(['overview/main-page']);
+            })
+            .catch(() => {
+                this.snackbarService.openSnackBar(
+                    'Rendszerhiba, kérjük próbálkozzon később!',
+                    undefined,
+                    { duration: 3000, panelClass: ['red-snackbar'] }
+                );
             });
-            this.router.navigate(['overview/main-page']);
-        });
     }
 
     updatePet(
@@ -82,16 +103,10 @@ export class FirebaseCrudService {
         data: { name: string; weight: number; isPublic: boolean }
     ) {
         const petDoc = doc(this.db, 'pets', petId);
-        updateDoc(petDoc, {
+        return updateDoc(petDoc, {
             name: data.name,
             weight: data.weight,
             isPublic: data.isPublic,
-        }).then(() => {
-            this.snackbarService.openSnackBar(
-                'Háziállat sikeresen módosítva!',
-                undefined,
-                { duration: 3000, panelClass: ['green-snackbar'] }
-            );
         });
     }
 
@@ -143,7 +158,11 @@ export class FirebaseCrudService {
                     dueDate = new Date(doc.data()['dueDate']);
                 }
 
-                const docWithDueDate = { id: doc.id, ...doc.data(), dueDate };
+                const docWithDueDate = {
+                    id: doc.id,
+                    ...doc.data(),
+                    dueDate,
+                };
                 conditionsWithDueDate.push(docWithDueDate);
             });
 
@@ -190,13 +209,25 @@ export class FirebaseCrudService {
 
     deleteCondition(condId: string, callback?: () => void) {
         const condDoc = doc(this.db, 'conditions', condId);
-        deleteDoc(condDoc).then(() => {
-            this.snackbarService.openSnackBar('Állapot törölve!', undefined, {
-                duration: 3000,
-                panelClass: ['green-snackbar'],
+        deleteDoc(condDoc)
+            .then(() => {
+                this.snackbarService.openSnackBar(
+                    'Állapot törölve!',
+                    undefined,
+                    {
+                        duration: 3000,
+                        panelClass: ['green-snackbar'],
+                    }
+                );
+                callback();
+            })
+            .catch(() => {
+                this.snackbarService.openSnackBar(
+                    'Rendszerhiba, kérjük próbálkozzon később!',
+                    undefined,
+                    { duration: 3000, panelClass: ['red-snackbar'] }
+                );
             });
-            callback();
-        });
     }
 
     getUserData(uid: string) {
@@ -219,12 +250,24 @@ export class FirebaseCrudService {
 
     createRequest(request: any) {
         const requestRef = collection(this.db, 'requests');
-        addDoc(requestRef, request).then(() => {
-            this.snackbarService.openSnackBar('Kérelem elküldve!', undefined, {
-                duration: 3000,
-                panelClass: ['green-snackbar'],
+        addDoc(requestRef, request)
+            .then(() => {
+                this.snackbarService.openSnackBar(
+                    'Kérelem elküldve!',
+                    undefined,
+                    {
+                        duration: 3000,
+                        panelClass: ['green-snackbar'],
+                    }
+                );
+            })
+            .catch(() => {
+                this.snackbarService.openSnackBar(
+                    'Rendszerhiba, kérjük próbálkozzon később!',
+                    undefined,
+                    { duration: 3000, panelClass: ['red-snackbar'] }
+                );
             });
-        });
     }
 
     getRequests(vetId?: string, ownerId?: string) {
@@ -280,6 +323,38 @@ export class FirebaseCrudService {
     listVaccinesForPet(petId: string) {
         const vacRef = collection(this.db, 'vaccinations');
         const q = query(vacRef, where('petId', '==', petId));
+        return getDocs(q);
+    }
+
+    addVaccinations(vaccination: any) {
+        const vacRef = collection(this.db, 'vaccinations');
+        addDoc(vacRef, vaccination)
+            .then(() => {
+                this.snackbarService.openSnackBar(
+                    'Vakcina sikeresen rögzítve!',
+                    undefined,
+                    { duration: 3000, panelClass: ['green-snackbar'] }
+                );
+            })
+            .catch(() => {
+                this.snackbarService.openSnackBar(
+                    'Rendszerhiba, kérjük próbálkozzon később!',
+                    undefined,
+                    { duration: 3000, panelClass: ['red-snackbar'] }
+                );
+            });
+    }
+
+    deleteVaccine(vacId: string, callback?: () => void) {
+        const vacDoc = doc(this.db, 'vaccinations', vacId);
+        deleteDoc(vacDoc).then(() => {
+            callback();
+        });
+    }
+
+    getRelatedUsers(uid: string) {
+        const userRef = collection(this.db, 'users');
+        const q = query(userRef, where('vet', '==', uid));
         return getDocs(q);
     }
 }

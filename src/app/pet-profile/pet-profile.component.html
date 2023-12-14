@@ -34,7 +34,7 @@
         <div class="row m-3">
             <div class="col">
                 <label>Név</label>
-                <p>{{ user.name ?? "Nincs megadva" }}</p>
+                <p>{{ user.name ? user.name : "Nincs megadva" }}</p>
             </div>
             <div class="col">
                 <label>Email</label>

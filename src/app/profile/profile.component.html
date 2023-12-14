@@ -1,4 +1,4 @@
-<div *ngIf="loaded; else loader">
+<div *ngIf="loaded; else reqLoader">
     <h3 class="text-center m-5 opacity-75">Profil</h3>
     <div class="row my-4 mx-5">
         <div class="col">
@@ -115,10 +115,68 @@
         </div>
     </div>
     <mat-divider></mat-divider>
-    <h3 class="text-center m-5 opacity-75">Kérelmek</h3>
-    <ng-container *ngIf="requestLoaded; else loader">
-        <ng-container *ngIf="requests.length > 0; else noRequests">
+    <h3 class="text-center m-5 opacity-75" *ngIf="userData.isVet">Kliensek</h3>
+    <h3 class="text-center m-5 opacity-75" *ngIf="!userData.isVet">
+        Állatorvos
+    </h3>
+    <ng-container *ngIf="relLoaded; else clientLoader">
+        <ng-container *ngIf="relatedUsers.length > 0; else noClient">
             <div>
+                <div class="row my-2 mx-5 fst-italic fw-bold fs-6 opacity-50">
+                    <div class="col-md-2">E-mail</div>
+                    <div class="col">Név</div>
+                    <div class="col">Mobil</div>
+                    <div class="col"></div>
+                </div>
+                <div class="row my-2 mx-5" *ngFor="let usr of relatedUsers">
+                    <div class="col-md-2">{{ usr.email }}</div>
+                    <div class="col">{{ usr.name ?? "nincs megadva" }}</div>
+                    <div class="col">
+                        {{ usr.mobile ? "+36" + usr.mobile : "nincs megadva" }}
+                    </div>
+                    <div class="col fs-6 pb-3">
+                        <button
+                            mat-button
+                            color="warn"
+                            (click)="unassignUser(usr.id)"
+                        >
+                            <mat-icon>cancel</mat-icon>
+                            {{
+                                userData.isVet
+                                    ? "Leiratkoztatás"
+                                    : "Leiratkozás"
+                            }}
+                        </button>
+                    </div>
+                    <mat-divider></mat-divider>
+                </div>
+            </div>
+        </ng-container>
+        <ng-template #noClient>
+            <div
+                *ngIf="userData.isVet"
+                class="row my-4 mx-5 fst-italic opacity-25 fw-bold justify-content-center align-items-center d-flex"
+            >
+                Nincs kliens felvéve.
+            </div>
+            <div
+                *ngIf="!userData.isVet"
+                class="row my-4 mx-5 fst-italic opacity-25 fw-bold justify-content-center align-items-center d-flex"
+            >
+                Nincs állatorvos regisztrálva.
+            </div>
+        </ng-template>
+    </ng-container>
+    <ng-template #clientLoader>
+        <div class="align-items-center justify-content-center d-flex m-5">
+            <mat-spinner></mat-spinner>
+        </div>
+    </ng-template>
+    <mat-divider></mat-divider>
+    <h3 class="text-center m-5 opacity-75">Jelentkezés</h3>
+    <ng-container *ngIf="requestLoaded; else reqLoader">
+        <ng-container *ngIf="requests.length > 0; else noRequests">
+            <div class="mb-5">
                 <div class="row my-2 mx-5 fst-italic fw-bold fs-6 opacity-50">
                     <div class="col-md-2">E-mail</div>
                     <div class="col">Név</div>
@@ -172,12 +230,12 @@
             <div
                 class="row my-4 mx-5 fst-italic opacity-25 fw-bold justify-content-center align-items-center d-flex"
             >
-                Nincsenek függőben lévő kérelmek
+                Nincs függőben lévő kérelem.
             </div>
         </ng-template>
     </ng-container>
 </div>
-<ng-template #loader>
+<ng-template #reqLoader>
     <div class="align-items-center justify-content-center d-flex m-5">
         <mat-spinner></mat-spinner>
     </div>

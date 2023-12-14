@@ -6,8 +6,12 @@ import { FirebaseCrudService } from '../shared/firebase-crud.service';
 import { MatDialog } from '@angular/material/dialog';
 import firebase from 'firebase/compat';
 import QueryDocumentSnapshot = firebase.firestore.QueryDocumentSnapshot;
+import { NewVaccinationDialogComponent } from '../dialogs/new-vaccination-dialog/new-vaccination-dialog.component';
+import { SnackbarService } from '../shared/snackbar.service';
+import { ConfirmDialogComponent } from '../dialogs/confirm-dialog/confirm-dialog.component';
 
 interface DisplayVac {
+    id: string;
     date: string;
     name: string;
     petId: string;
@@ -34,6 +38,7 @@ export class BookComponent implements OnInit {
 
     constructor(
         private firebaseCrudService: FirebaseCrudService,
+        private snackbarService: SnackbarService,
         private dialog: MatDialog,
         private fb: FormBuilder
     ) {}
@@ -41,7 +46,7 @@ export class BookComponent implements OnInit {
     ngOnInit(): void {
         if (getAuth()) {
             this.auth = getAuth();
-            this.user = this.auth.currentUser.email;
+            this.user = this.auth.currentUser.uid;
         }
         this.setAllOwners(this.auth.currentUser.uid);
         this.initializeForm();
@@ -119,6 +124,7 @@ export class BookComponent implements OnInit {
                     querySnapshot.docs as unknown as QueryDocumentSnapshot<unknown>[];
                 documentSnapshots.forEach((item, index) => {
                     this.vaccinations[index] = {
+                        id: item.id,
                         date: item.data()['date'],
                         name: item.data()['name'],
                         petId: item.data()['petId'],
@@ -132,5 +138,43 @@ export class BookComponent implements OnInit {
                         });
                 });
             });
+    }
+
+    openAddVaccination(petId: string) {
+        const dialogRef = this.dialog.open(NewVaccinationDialogComponent, {
+            height: '420px',
+            width: '480px',
+            data: { vetId: this.user, petId: petId },
+            disableClose: true,
+        });
+
+        dialogRef.afterClosed().subscribe(() => {
+            this.showData(this.selectedPetId);
+        });
+    }
+
+    deleteVaccine(vacId: string) {
+        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+            data: {
+                title: 'Vakcina törlése',
+                message: 'Biztosan töröli ezt a vakcinát?',
+            },
+            disableClose: true,
+        });
+        dialogRef.afterClosed().subscribe((result) => {
+            if (result) {
+                this.firebaseCrudService.deleteVaccine(vacId, () => {
+                    this.showData(this.selectedPetId);
+                    this.snackbarService.openSnackBar(
+                        'Vakcina törölve!',
+                        undefined,
+                        {
+                            duration: 3000,
+                            panelClass: ['green-snackbar'],
+                        }
+                    );
+                });
+            }
+        });
     }
 }

@@ -7,6 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { NewPetDialogComponent } from '../../dialogs/new-pet-dialog/new-pet-dialog.component';
 import { UtilsService } from '../../shared/utils.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import {SnackbarService} from "../../shared/snackbar.service";
 
 @Component({
     selector: 'app-overview',
@@ -23,14 +24,14 @@ export class OverviewComponent implements OnInit {
     selectUserPets: FormGroup;
     owners: { uid: string; display: string }[];
     selectedOwner: string;
-    showButton = false;
 
     constructor(
         private router: Router,
         private firebaseCrudService: FirebaseCrudService,
         private dialog: MatDialog,
         private utilsService: UtilsService,
-        private fb: FormBuilder
+        private fb: FormBuilder,
+        private snackbarService: SnackbarService
     ) {}
 
     ngOnInit(): void {
@@ -47,10 +48,23 @@ export class OverviewComponent implements OnInit {
     }
 
     addPet(ownerId?: string) {
-        this.dialog.open(NewPetDialogComponent, {
+        if (this.userData.data.isVet && !ownerId) {
+            this.snackbarService.openSnackBar(
+                'Válasszon ki egy felhasználót!',
+                undefined,
+                { duration: 3000, panelClass: ['yellow-snackbar'] }
+            );
+            return;
+        }
+        const dialogRef = this.dialog.open(NewPetDialogComponent, {
             height: '780px',
             width: '400px',
             data: ownerId,
+            disableClose: true,
+        });
+        dialogRef.afterClosed().subscribe(() => {
+            this.myPets = [];
+            this.listPets();
         });
     }
 
@@ -61,7 +75,6 @@ export class OverviewComponent implements OnInit {
     }
 
     async listPets() {
-        this.showButton = false;
         let uidForPets: string;
         const userSnapshot = await this.firebaseCrudService.getUserData(
             this.auth.currentUser.uid
@@ -85,7 +98,6 @@ export class OverviewComponent implements OnInit {
             result.docs.forEach((doc) => {
                 this.myPets.push({ id: doc.id, ...doc.data() });
                 this.listToDosForPet(doc.id);
-                this.showButton = true;
             });
         });
     }
