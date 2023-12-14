@@ -13,7 +13,6 @@ import { Pet } from '../models/pet.model';
 import { SnackbarService } from './snackbar.service';
 import { Router } from '@angular/router';
 import { doc, getDoc } from '@angular/fire/firestore';
-import { user } from '@angular/fire/auth';
 
 @Injectable({
     providedIn: 'root',

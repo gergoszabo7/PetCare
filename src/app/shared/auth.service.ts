@@ -3,7 +3,6 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Router } from '@angular/router';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { MatDialog } from '@angular/material/dialog';
-import { ConfirmDialogComponent } from '../dialogs/confirm-dialog/confirm-dialog.component';
 import { WelcomeDialogComponent } from '../dialogs/welcome-dialog/welcome-dialog.component';
 
 @Injectable({

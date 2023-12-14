@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FirebaseCrudService } from '../shared/firebase-crud.service';
-import { Auth, getAuth } from 'firebase/auth';
+import { getAuth } from 'firebase/auth';
 import { Router } from '@angular/router';
-import { NewPetDialogComponent } from '../dialogs/new-pet-dialog/new-pet-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { NewRequestDialogComponent } from '../dialogs/new-request-dialog/new-request-dialog.component';
 @Component({

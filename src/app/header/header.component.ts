@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../shared/auth.service';
-import { FirebaseCrudService } from '../shared/firebase-crud.service';
 
 @Component({
     selector: 'app-header',

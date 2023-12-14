@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Pet } from '../../models/pet.model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Auth, getAuth } from 'firebase/auth';
+import { Auth } from 'firebase/auth';
 import { FirebaseCrudService } from '../../shared/firebase-crud.service';
 import { ConfirmDialogComponent } from '../../dialogs/confirm-dialog/confirm-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
